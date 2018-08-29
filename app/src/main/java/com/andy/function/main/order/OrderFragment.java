@@ -1,6 +1,7 @@
 package com.andy.function.main.order;
 
 import android.view.View;
+import android.widget.TextView;
 
 import com.andy.BaseFragment;
 import com.andy.R;
@@ -15,9 +16,12 @@ public class OrderFragment extends BaseFragment {
         return R.layout.fragment_order;
     }
 
+    private TextView vTitle;
+
     @Override
     protected void initView(View view) {
-
+        vTitle = view.findViewById(R.id.title);
+        vTitle.setText(R.string.main_order);
     }
 
     @Override

@@ -37,7 +37,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/bg_underline_and_topline"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,13 +46,13 @@
 
         <ImageView
             android:id="@+id/item1_img"
-            android:src="@mipmap/catalog"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="39dp"
+            android:layout_marginStart="18dp"
             android:contentDescription="@string/person_item1"
+            android:src="@mipmap/catalog"
             app:srcCompat="@mipmap/catalog" />
 
         <TextView
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="112dp"
+            android:layout_marginStart="60dp"
             android:text="@string/person_item1"
             android:textColor="@android:color/black" />
     </RelativeLayout>
@@ -77,13 +77,13 @@
 
         <ImageView
             android:id="@+id/item3_img"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="39dp"
-            android:src="@mipmap/logout"
+            android:layout_marginStart="18dp"
             android:contentDescription="@string/person_item3"
+            android:src="@mipmap/logout"
             app:srcCompat="@mipmap/logout" />
 
         <TextView
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="112dp"
+            android:layout_marginStart="60dp"
             android:text="@string/person_item3"
             android:textColor="@android:color/black" />
     </RelativeLayout>
@@ -109,13 +109,13 @@
 
         <ImageView
             android:id="@+id/item2_img"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:src="@mipmap/notification"
-            android:layout_marginStart="39dp"
+            android:layout_marginStart="18dp"
             android:contentDescription="@string/person_item2"
+            android:src="@mipmap/notification"
             app:srcCompat="@mipmap/notification" />
 
         <TextView
@@ -124,7 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="112dp"
+            android:layout_marginStart="60dp"
             android:text="@string/person_item2"
             android:textColor="@android:color/black" />
     </RelativeLayout>
