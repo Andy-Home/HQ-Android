@@ -1,8 +1,26 @@
 <resources>
     <string name="app_name">HQ</string>
+    <!-- 登录页面 -->
     <string name="login_user">邮箱</string>
     <string name="login_password">密码</string>
     <string name="login_button">登录</string>
     <string name="login_register">注册账号</string>
     <string name="login_find_password">找回密码</string>
+
+    <!-- 主页面 -->
+    <string name="main_order">账单</string>
+    <string name="main_chart">图表</string>
+    <string name="main_person">个人</string>
+
+    <!--个人页面-->
+    <string name="person_item1">账务目录</string>
+    <string name="person_item2">记账通知</string>
+    <string name="person_item3">退出登录</string>
+
+    <!-- 图片描述信息 -->
+    <string name="head_img_desc">个人头像</string>
+    <string name="relative_head_img">关系人头像</string>
+
+    <string name="title">标题</string>
+    <string name="back">返回</string>
 </resources>
