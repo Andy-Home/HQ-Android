@@ -20,10 +20,12 @@
 
     <ImageView
         android:id="@+id/back"
-        android:layout_width="26dp"
-        android:layout_height="43dp"
+        android:layout_width="21dp"
+        android:layout_height="32dp"
         android:layout_marginStart="16dp"
+        android:clickable="true"
         android:contentDescription="@string/back"
+        android:focusable="true"
         android:src="@mipmap/back"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

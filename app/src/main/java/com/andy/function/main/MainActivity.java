@@ -45,11 +45,6 @@ public class MainActivity extends BaseActivity {
     private BottomNavigationView vBottomNavigationView;
     private ViewPager vViewPager;
 
-    private int[] mTabImgResId = {R.drawable.tab_order_selector,
-            R.drawable.tab_chart_selector,
-            R.drawable.tab_person_selector};
-    private String[] mTabTextResId = {"账单", "图表", "个人"};
-
     @Override
     protected void initView() {
         OrderFragment mOrderFragment = new OrderFragment();
@@ -116,4 +111,7 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() { }
 }

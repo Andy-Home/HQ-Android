@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/item1"
         android:title="@string/main_order"
-        android:icon="@drawable/tab_order_selector" />
+        android:icon="@mipmap/order" />
     <item android:id="@+id/item2"
         android:title="@string/main_chart"
-        android:icon="@drawable/tab_chart_selector" />
+        android:icon="@mipmap/chart" />
     <item android:id="@+id/item3"
         android:title="@string/main_person"
-        android:icon="@drawable/tab_person_selector" />
+        android:icon="@mipmap/person" />
 </menu>

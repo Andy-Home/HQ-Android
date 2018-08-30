@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/item1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.29"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include3" />
 
     <ImageView
         android:id="@+id/head_img"
@@ -35,11 +46,13 @@
         app:srcCompat="@mipmap/ic_launcher_round" />
 
     <RelativeLayout
-        android:id="@+id/relativeLayout"
+        android:id="@+id/item1"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="40dp"
-        android:background="@drawable/bg_underline_and_topline"
+        android:background="@drawable/layout_bg_with_underline"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/head_img">
@@ -64,16 +77,34 @@
             android:layout_marginStart="60dp"
             android:text="@string/person_item1"
             android:textColor="@android:color/black" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="18dp"
+            app:srcCompat="@mipmap/right" />
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/item3"
         android:layout_width="0dp"
         android:layout_height="57dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bg_underline_and_topline"
+        android:background="@drawable/layout_bg"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2">
+        app:layout_constraintTop_toBottomOf="@+id/item2">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="18dp"
+            app:srcCompat="@mipmap/right" />
 
         <ImageView
             android:id="@+id/item3_img"
@@ -98,14 +129,23 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout2"
+        android:id="@+id/item2"
         android:layout_width="0dp"
         android:layout_height="57dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bg_underline_and_topline"
+        android:background="@drawable/layout_bg_with_underline"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
+        app:layout_constraintTop_toBottomOf="@+id/item1">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="18dp"
+            app:srcCompat="@mipmap/right" />
 
         <ImageView
             android:id="@+id/item2_img"
@@ -130,6 +170,7 @@
     </RelativeLayout>
 
     <include
+        android:id="@+id/include3"
         layout="@layout/layout_header"
         android:layout_width="0dp"
         android:layout_height="50dp"

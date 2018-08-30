@@ -1,5 +1,7 @@
 package com.andy.function.login;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +18,12 @@ import com.andy.utils.ToastUtils;
  * Modify time 2018/8/28
  */
 public class LoginActivity extends BaseActivity {
+
+    public static void start(Context context){
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
+
     @Override
     protected int getContentViewId() {
         return R.layout.activity_login;
@@ -29,6 +37,7 @@ public class LoginActivity extends BaseActivity {
     protected void initView() {
         vUser = findViewById(R.id.user);
         vPassword = findViewById(R.id.password);
+        vPassword.setText("");
 
         vLogin = findViewById(R.id.login);
 
