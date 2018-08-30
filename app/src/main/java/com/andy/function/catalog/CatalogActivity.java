@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.andy.BaseActivity;
 import com.andy.R;
+import com.andy.function.catalog_edit.CatalogEditActivity;
 
 /**
  * 账务目录，记录账务关系
@@ -70,6 +71,20 @@ public class CatalogActivity extends BaseActivity {
                     CatalogAnimator.funPopAnimator(vToolbox,vNewCatalog,1);
                     CatalogAnimator.funPopAnimator(vToolbox,vEdit,2);
                 }
+            }
+        });
+
+        vNewCatalog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CatalogEditActivity.start(CatalogActivity.this, CatalogEditActivity.NEW);
+            }
+        });
+
+        vEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CatalogEditActivity.start(CatalogActivity.this, CatalogEditActivity.EDIT);
             }
         });
     }

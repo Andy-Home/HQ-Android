@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/mainColor"
     android:layout_width="match_parent"
     android:layout_height="50dp">
@@ -35,10 +34,14 @@
 
     <Button
         android:id="@+id/fun"
-        android:layout_width="76dp"
-        android:layout_height="42dp"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:paddingRight="6dp"
+        android:paddingLeft="6dp"
+        android:background="@drawable/bg_header_fun"
         android:layout_marginEnd="8dp"
-        android:text="Button"
+        android:text="@string/back"
+        android:textColor="@color/mainColor"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

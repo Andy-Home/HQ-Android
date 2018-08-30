@@ -20,6 +20,16 @@
     <!-- 账务目录页面 -->
     <string name="catalog_title">账务目录</string>
 
+    <!-- 账务目录编辑页 -->
+    <string name="catalog_category">类别 :</string>
+    <string name="input_catalog_name">请输入目录名称</string>
+    <string name="earnings">收入</string>
+    <string name="expenditure">支出</string>
+    <string name="catalog_delete">删除</string>
+    <string name="catalog_title_new">新建</string>
+    <string name="catalog_title_edit">编辑</string>
+    <string name="catalog_save">保存</string>
+
     <!-- 图片描述信息 -->
     <string name="head_img_desc">个人头像</string>
     <string name="relative_head_img">关系人头像</string>

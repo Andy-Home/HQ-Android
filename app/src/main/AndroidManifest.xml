@@ -21,6 +21,7 @@
         <activity android:name=".function.main.MainActivity"
             android:launchMode="singleTask"/>
         <activity android:name=".function.catalog.CatalogActivity" />
+        <activity android:name=".function.catalog_edit.CatalogEditActivity" />
 
     </application>
 

@@ -8,4 +8,7 @@
         <item name="colorAccent">@color/mainColor</item>
     </style>
 
+    <style name="SwitchStyle" parent="@style/TextAppearance.AppCompat.Widget.Switch">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 </resources>
