@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginEnd="8dp"
@@ -33,7 +33,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/catalog_category"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintBottom_toTopOf="@+id/name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.027"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +49,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -58,7 +58,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/catalog_title"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintBottom_toTopOf="@+id/name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView2"
@@ -77,7 +77,7 @@
         android:switchTextAppearance="@style/SwitchStyle"
         android:thumb="@drawable/thumb_selector"
         android:track="@drawable/track_selector"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintBottom_toTopOf="@+id/name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include5" />
 
@@ -86,7 +86,7 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@color/mainColor"
-        android:text="Button"
+        android:text="@string/catalog_delete"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:visibility="gone"

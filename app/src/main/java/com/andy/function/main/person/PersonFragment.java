@@ -37,7 +37,7 @@ public class PersonFragment extends BaseFragment {
         vItem1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CatalogActivity.start(getActivity());
+                CatalogActivity.start(getActivity(), 0, "");
             }
         });
 

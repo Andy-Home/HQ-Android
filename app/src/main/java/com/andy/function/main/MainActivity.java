@@ -32,6 +32,11 @@ import java.util.Objects;
  */
 public class MainActivity extends BaseActivity {
 
+    private static int userId = 0;
+    public static int getUserId(){
+        return userId;
+    }
+
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);

@@ -29,9 +29,24 @@ public class DBManage {
         }
     }
 
-    public UserDao getUserDao() throws Exception {
-        checkNull();
+    public UserDao getUserDao(){
+        try {
+            checkNull();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
         return db.userDao();
+    }
+
+    public CatalogDao getCatalogDao(){
+        try {
+            checkNull();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return db.catalogDao();
     }
 
     private void checkNull() throws Exception {

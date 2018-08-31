@@ -7,6 +7,8 @@ import android.arch.persistence.room.Query;
 
 import com.andy.dao.db.entity.User;
 
+import io.reactivex.Maybe;
+
 /**
  * Created by Andy on 2018/8/28.
  * Modify time 2018/8/28
@@ -20,5 +22,5 @@ public interface UserDao {
     void insertUsers(User... users);
 
     @Query("select * from users where id = :userId")
-    User queryUser(int userId);
+    Maybe<User> queryUser(int userId);
 }

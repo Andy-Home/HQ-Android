@@ -37,6 +37,7 @@ dependencies {
     implementation "android.arch.persistence.room:rxjava2:$room_version"
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid"
 
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
 
@@ -45,4 +46,6 @@ dependencies {
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
 }

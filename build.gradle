@@ -3,6 +3,8 @@
 buildscript {
     ext.kotlin_version = '1.2.30'
     ext.room_version = "1.1.1"
+    ext.rxandroid = "2.1.0"
+
     repositories {
         google()
         jcenter()
