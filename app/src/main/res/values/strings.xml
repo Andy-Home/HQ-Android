@@ -30,6 +30,12 @@
     <string name="catalog_title_edit">编辑</string>
     <string name="catalog_save">保存</string>
 
+    <!-- 记账页面 -->
+    <string name="record_num_default">0.00</string>
+    <string name="record_earnings">收</string>
+    <string name="record_expenditure">支</string>
+    <string name="record_date_desc">1995 &#8211; 04 &#8211; 15</string>
+
     <!-- 图片描述信息 -->
     <string name="head_img_desc">个人头像</string>
     <string name="relative_head_img">关系人头像</string>
