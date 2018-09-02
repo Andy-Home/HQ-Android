@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.andy.R;
@@ -34,6 +33,10 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.CatalogV
     public void changeStatus(int status){
         this.status = status;
         notifyDataSetChanged();
+    }
+
+    public int currentStatus() {
+        return status;
     }
 
     @NonNull

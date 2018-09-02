@@ -2,7 +2,6 @@ package com.andy.function.catalog_edit;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 
 import com.andy.dao.db.CatalogDao;
 import com.andy.dao.db.DBManage;
@@ -49,12 +48,15 @@ public class CatalogEditPresent implements CatalogEditContract.Present {
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void save(final Catalog catalog) {
         Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
                 mCatalogDao.insert(catalog);
+                emitter.onNext(1);
+                emitter.onComplete();
             }
         });
         observable.subscribeOn(Schedulers.io())
@@ -68,12 +70,15 @@ public class CatalogEditPresent implements CatalogEditContract.Present {
 
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void delete(final Catalog catalog) {
         Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
                 mCatalogDao.deleteCatalog(catalog);
+                emitter.onNext(1);
+                emitter.onComplete();
             }
         });
         observable.subscribeOn(Schedulers.io())

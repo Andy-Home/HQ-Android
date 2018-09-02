@@ -130,8 +130,15 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
         vEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAdapter.changeStatus(CatalogAdapter.EDIT);
                 vToolbox.performClick();
+                if (mAdapter.currentStatus() == CatalogAdapter.DEFAULT) {
+                    mAdapter.changeStatus(CatalogAdapter.EDIT);
+                    vEdit.setImageResource(R.mipmap.right_white);
+                } else if (mAdapter.currentStatus() == CatalogAdapter.EDIT) {
+                    mAdapter.changeStatus(CatalogAdapter.DEFAULT);
+                    vEdit.setImageResource(R.mipmap.edit_white);
+                }
+
             }
         });
 
