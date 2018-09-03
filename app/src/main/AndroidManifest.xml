@@ -22,6 +22,7 @@
             android:launchMode="singleTask"/>
         <activity android:name=".function.catalog.CatalogActivity" />
         <activity android:name=".function.catalog_edit.CatalogEditActivity" />
+        <activity android:name=".function.new_record.NewRecordActivity" />
 
     </application>
 

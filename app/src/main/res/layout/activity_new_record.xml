@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -51,37 +52,51 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/time"
         android:layout_width="191dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/bg_rectangle_white"
+        android:background="@drawable/bg_rectangle_white_main_color_stroke"
         android:text="@string/record_date_desc"
         android:textAllCaps="false"
+        android:textColor="@color/mainColor"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText"
         app:layout_constraintVertical_bias="0.007" />
 
-    <TextView
-        android:id="@+id/textView3"
+    <com.andy.view.TextWithDropView
+        android:id="@+id/category"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"
-        android:gravity="start|center_vertical"
-        android:text="@string/app_name"
-        app:layout_constraintEnd_toStartOf="@+id/button"
+        app:layout_constraintBottom_toBottomOf="@+id/time"
+        app:layout_constraintEnd_toStartOf="@+id/time"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toTopOf="@+id/time"
+        app:layout_constraintVertical_bias="0.0" />
 
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time"
+        app:mcv_firstDayOfWeek="monday"
+        app:mcv_calendarMode="month"
+        app:mcv_selectionColor="@color/mainColor"
+        app:mcv_showOtherDates="all"
+        app:mcv_weekDayLabels="@array/custom_weekdays" />
 
 </android.support.constraint.ConstraintLayout>
