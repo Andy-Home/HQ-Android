@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -53,7 +52,7 @@
 
     <Button
         android:id="@+id/time"
-        android:layout_width="191dp"
+        android:layout_width="130dp"
         android:layout_height="50dp"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
@@ -62,13 +61,14 @@
         android:text="@string/record_date_desc"
         android:textAllCaps="false"
         android:textColor="@color/mainColor"
+        android:textSize="14sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText"
         app:layout_constraintVertical_bias="0.007" />
 
-    <com.andy.view.TextWithDropView
+    <com.andy.function.new_record.view.TextWithDropView
         android:id="@+id/category"
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -83,6 +83,7 @@
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
@@ -98,5 +99,15 @@
         app:mcv_selectionColor="@color/mainColor"
         app:mcv_showOtherDates="all"
         app:mcv_weekDayLabels="@array/custom_weekdays" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/category"></LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

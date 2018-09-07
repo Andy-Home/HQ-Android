@@ -80,8 +80,6 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
         vBack = findViewById(R.id.back);
         vBack.setVisibility(View.VISIBLE);
 
-        vRecyclerView = findViewById(R.id.list);
-
         vToolbox = findViewById(R.id.toolbox);
         vEdit = findViewById(R.id.edit);
         vNewCatalog = findViewById(R.id.new_catalog);

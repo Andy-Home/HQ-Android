@@ -35,6 +35,8 @@
     <string name="record_earnings">收</string>
     <string name="record_expenditure">支</string>
     <string name="record_date_desc">1995 &#8211; 04 &#8211; 15</string>
+    <string name="record_title">记账</string>
+    <string name="record_save">保存</string>
 
     <!-- 图片描述信息 -->
     <string name="head_img_desc">个人头像</string>
