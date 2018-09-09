@@ -40,6 +40,11 @@
     <string name="record_choose_type">账务类型</string>
     <string name="record_input_money_tips">未输入金额</string>
 
+    <!-- 账务列表 -->
+    <string name="records_earnings">收</string>
+    <string name="records_expenditure">支</string>
+    <string name="records_data_desc">1995 &#8211; 04 &#8211; 15 周五</string>
+
     <!-- 图片描述信息 -->
     <string name="head_img_desc">个人头像</string>
     <string name="relative_head_img">关系人头像</string>
