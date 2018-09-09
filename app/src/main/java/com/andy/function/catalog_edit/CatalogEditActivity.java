@@ -53,6 +53,7 @@ public class CatalogEditActivity extends BaseActivity implements CatalogEditCont
 
         mParentName = dataIntent.getStringExtra("parentName");
         mPresent = new CatalogEditPresent(this, this);
+        getLifecycle().addObserver(mPresent);
     }
 
     @Override
@@ -122,9 +123,9 @@ public class CatalogEditActivity extends BaseActivity implements CatalogEditCont
                 catalog.parentId = mParentId;
                 catalog.userId = MainActivity.getUserId();
                 if(vType.isChecked()){
-                    catalog.style = 0;
-                }else {
                     catalog.style = 1;
+                } else {
+                    catalog.style = 0;
                 }
 
                 mPresent.save(catalog);

@@ -53,6 +53,7 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
         mParentName = dataIntent.getStringExtra("parentName");
 
         mPresent = new CatalogPresent(this, this);
+        getLifecycle().addObserver(mPresent);
     }
 
     @Override
@@ -88,8 +89,6 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
         vRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new CatalogAdapter(this, mData);
         vRecyclerView.setAdapter(mAdapter);
-
-        mPresent.getCatalogs(mParentId, MainActivity.getUserId());
     }
 
     private boolean mOpenToolbox = false;
@@ -150,10 +149,15 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
                 } else if (status == CatalogAdapter.EDIT) {
 
                     CatalogEditActivity.start(CatalogActivity.this, CatalogEditActivity.EDIT, mParentId, mParentName, item.id);
-
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresent.getCatalogs(mParentId, MainActivity.getUserId());
     }
 
     @Override

@@ -1,8 +1,9 @@
 package com.andy.dao.db;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
-import android.text.TextUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,9 +26,22 @@ public class DBManage {
     private AppDataBase db = null;
     public void init(@NotNull Context context){
         if(db == null){
-            db = Room.databaseBuilder(context,AppDataBase.class,"hq.db").build();
+            db = Room.databaseBuilder(context, AppDataBase.class, "hq.db")
+                    .addMigrations(MIGRATION_1_2)
+                    .build();
         }
     }
+
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE `records` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + "`type_id` INTEGER NOT NULL,"
+                    + "`user_id` INTEGER NOT NULL,"
+                    + "`num` REAL NOT NULL,"
+                    + "`time` INTEGER NOT NULL)");
+        }
+    };
 
     public UserDao getUserDao(){
         try {
@@ -47,6 +61,16 @@ public class DBManage {
             return null;
         }
         return db.catalogDao();
+    }
+
+    public RecordDao getRecordDao() {
+        try {
+            checkNull();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return db.recordDao();
     }
 
     private void checkNull() throws Exception {

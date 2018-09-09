@@ -1,6 +1,8 @@
 package com.andy.function.catalog_edit;
 
-import android.annotation.SuppressLint;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 
 import com.andy.dao.db.CatalogDao;
@@ -11,6 +13,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -18,7 +21,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Andy on 2018/8/31.
  * Modify time 2018/8/31
  */
-public class CatalogEditPresent implements CatalogEditContract.Present {
+public class CatalogEditPresent implements CatalogEditContract.Present, LifecycleObserver {
     private Context mContext;
     private CatalogEditContract.View mView;
 
@@ -34,10 +37,25 @@ public class CatalogEditPresent implements CatalogEditContract.Present {
         mCatalogDao = DBManage.getInstance().getCatalogDao();
     }
 
-    @SuppressLint("CheckResult")
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    public void onPause() {
+        if (mGetCatalog != null && !mGetCatalog.isDisposed()) {
+            mGetCatalog.dispose();
+        }
+
+        if (mSave != null && !mSave.isDisposed()) {
+            mSave.dispose();
+        }
+
+        if (mDelete != null && !mDelete.isDisposed()) {
+            mDelete.dispose();
+        }
+    }
+
+    private Disposable mGetCatalog = null;
     @Override
     public void getCatalog(int id) {
-        mCatalogDao.queryCatalog(id)
+        mGetCatalog = mCatalogDao.queryCatalog(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Catalog>() {
@@ -48,7 +66,7 @@ public class CatalogEditPresent implements CatalogEditContract.Present {
                 });
     }
 
-    @SuppressLint("CheckResult")
+    private Disposable mSave = null;
     @Override
     public void save(final Catalog catalog) {
         Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
@@ -59,7 +77,8 @@ public class CatalogEditPresent implements CatalogEditContract.Present {
                 emitter.onComplete();
             }
         });
-        observable.subscribeOn(Schedulers.io())
+        mSave = observable.subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Integer>() {
                     @Override
@@ -70,7 +89,7 @@ public class CatalogEditPresent implements CatalogEditContract.Present {
 
     }
 
-    @SuppressLint("CheckResult")
+    private Disposable mDelete;
     @Override
     public void delete(final Catalog catalog) {
         Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
@@ -81,7 +100,7 @@ public class CatalogEditPresent implements CatalogEditContract.Present {
                 emitter.onComplete();
             }
         });
-        observable.subscribeOn(Schedulers.io())
+        mDelete = observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Integer>() {
                     @Override

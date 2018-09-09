@@ -3,6 +3,7 @@ package com.andy.function.new_record;
 
 import android.view.View;
 
+import com.andy.dao.db.entity.Record;
 import com.andy.function.new_record.entity.CatalogItem;
 
 import java.util.List;
@@ -16,10 +17,14 @@ public class NewRecordContract {
     public interface Present {
 
         void getCatalog(View view, int id);
+
+        void saveRecord(Record record);
     }
 
     public interface Views {
 
-        void displayCatalogWindow(View view, List<CatalogItem> data);
+        void showCatalogWindow(View view, List<CatalogItem> data);
+
+        void saveRecordSuccess();
     }
 }

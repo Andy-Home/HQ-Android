@@ -36,7 +36,7 @@ public class CatalogPopupWindow extends PopupWindow {
     private CatalogAdapter mAdapter;
 
     private void init() {
-        setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        setWidth(mView.getWidth());
         setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
 
         setBackgroundDrawable(new ColorDrawable(0x00000000));

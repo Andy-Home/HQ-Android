@@ -6,4 +6,6 @@ public class CatalogItem {
     public int id;
 
     public int parentId;
+
+    public int type;
 }
