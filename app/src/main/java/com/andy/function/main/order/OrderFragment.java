@@ -1,6 +1,7 @@
 package com.andy.function.main.order;
 
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -33,6 +34,8 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
     private OrderPresent mPresent;
     private OrderAdapter mAdapter = null;
     private List<RecordContent> mData = new ArrayList<>();
+
+    private SwipeRefreshLayout vRefresh;
     @Override
     protected void initView(View view) {
         vTitle = view.findViewById(R.id.title);
@@ -40,12 +43,16 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
 
         vNewRecord = view.findViewById(R.id.fab);
 
+        vRefresh = view.findViewById(R.id.refresh);
+        vRefresh.setColorSchemeResources(R.color.mainColor);
+
         vList = view.findViewById(R.id.list);
         vList.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new OrderAdapter(mData, getContext());
         vList.setAdapter(mAdapter);
 
         mPresent = new OrderPresent(this);
+        mData.clear();
         mPresent.getRecords(System.currentTimeMillis(), 0, 10);
         getLifecycle().addObserver(mPresent);
     }
@@ -58,11 +65,20 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
                 NewRecordActivity.start(getActivity());
             }
         });
+
+        vRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mData.clear();
+                mPresent.getRecords(System.currentTimeMillis(), 0, 10);
+            }
+        });
     }
 
     @Override
     public void displayRecords(List<RecordContent> data) {
         mData.addAll(data);
         mAdapter.notifyDataSetChanged();
+        vRefresh.setRefreshing(false);
     }
 }

@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="mainColor">#ff8800</color>
+
+    <color name="color1">#ffb800</color>
+    <color name="color2">#1729b0</color>
+    <color name="color3">#086FA1</color>
+
+    <color name="color11">#BF7D30</color>
+    <color name="color12">#a65900</color>
+    <color name="color13">#FFCA40</color>
+    <color name="color14">#FFD873</color>
+    <color name="color15">#4B5CD7</color>
+    <color name="color16">#717DD7</color>
+    <color name="color17">#3CA0D0</color>
+    <color name="color18">#63add0</color>
 </resources>

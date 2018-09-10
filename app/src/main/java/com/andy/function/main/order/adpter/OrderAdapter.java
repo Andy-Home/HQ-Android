@@ -1,6 +1,7 @@
 package com.andy.function.main.order.adpter;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         RecordContent content = mData.get(position);
 
         if (content.status == 1) {
+            holder.time.setVisibility(View.VISIBLE);
             holder.time.setText(mFormat.format(new Date(content.time)));
         } else {
             holder.time.setVisibility(View.GONE);
@@ -53,9 +55,19 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     private void display(OrderViewHolder holder, RecordContent content) {
         if (content.type == 0) {
-            holder.type.setText(R.string.record_expenditure);
+            holder.type.setText(R.string.records_expenditure);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                holder.type.setTextColor(mContext.getColor(R.color.color3));
+            } else {
+                holder.type.setTextColor(mContext.getResources().getColor(R.color.color3));
+            }
         } else {
-            holder.type.setText(R.string.record_earnings);
+            holder.type.setText(R.string.records_earnings);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                holder.type.setTextColor(mContext.getColor(R.color.color1));
+            } else {
+                holder.type.setTextColor(mContext.getResources().getColor(R.color.color1));
+            }
         }
 
         holder.num.setText(String.valueOf(content.num));
