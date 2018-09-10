@@ -8,6 +8,7 @@ import android.arch.persistence.room.Update;
 
 import com.andy.dao.db.entity.Record;
 import com.andy.dao.db.entity.RecordContent;
+import com.andy.dao.db.entity.RecordStatistics;
 
 import java.util.List;
 
@@ -40,6 +41,14 @@ public interface RecordDao {
             "order by time desc " +
             "limit 0, :num")
     Flowable<List<RecordContent>> queryRecordContents(long start, long end, int num);
+
+    @Query("select count(records.num) as num, catalogs.name, records.type_id, catalogs.style " +
+            "from catalogs " +
+            "left join records " +
+            "on records.type_id = catalogs.id " +
+            "where catalogs.parent_id = :parentId " +
+            "and records.time < :start and records.time > :end ")
+    Flowable<List<RecordStatistics>> queryRecordStatistics(long start, long end, int parentId);
 
     @Query("select * from records where id = :id")
     Maybe<Record> queryRecord(long id);

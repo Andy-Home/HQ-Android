@@ -47,7 +47,7 @@ public class DBTest {
 
         mUserDao.insertUser(user);
 
-        User user1 = mUserDao.queryUser(1);
-        System.out.println("nickName:"+user1.nickName);
+        //User user1 = mUserDao.queryUser(1);
+        //System.out.println("nickName:"+user1.nickName);
     }
 }
