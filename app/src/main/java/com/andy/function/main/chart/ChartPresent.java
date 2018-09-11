@@ -10,11 +10,17 @@ import com.andy.dao.db.RecordDao;
 import com.andy.dao.db.entity.Catalog;
 import com.andy.dao.db.entity.RecordStatistics;
 
-import java.util.List;
+import org.reactivestreams.Publisher;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -49,28 +55,64 @@ public class ChartPresent implements ChartContract.Present, LifecycleObserver {
     private Disposable mGetCatalog = null;
 
     @Override
-    public void getCatalog(long start, long end, int id) {
-        mGetCatalog = mRecordDao.queryRecordStatistics(start, end, id)
+    public void getCatalog(final long start, final long end, int id) {
+        final List<RecordStatistics> data = new ArrayList<>();
+
+        mGetCatalog = mCatalogDao.queryCatalogList(id)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<RecordStatistics>>() {
+                .flatMap(new Function<List<Catalog>, Publisher<Catalog>>() {
                     @Override
-                    public void accept(List<RecordStatistics> recordStatistics) {
-                        mView.displayChart();
+                    public Publisher<Catalog> apply(List<Catalog> catalogs) {
+                        return Flowable.fromIterable(catalogs);
+                    }
+                }).map(new Function<Catalog, Map<String, Object>>() {
+
+                    @Override
+                    public Map<String, Object> apply(final Catalog catalog) {
+                        return mCatalogDao.queryCatalogAll(catalog.id)
+                                .observeOn(Schedulers.io())
+                                .map(new Function<List<Catalog>, Map<String, Object>>() {
+
+                                    @Override
+                                    public Map<String, Object> apply(List<Catalog> catalogs) {
+                                        Integer[] data = new Integer[catalogs.size()];
+                                        for (int i = 0; i < catalogs.size(); i++) {
+                                            data[i] = catalogs.get(i).id;
+                                        }
+                                        Map<String, Object> map = new HashMap<>();
+                                        map.put("data", data);
+                                        map.put("catalog", catalog);
+                                        return map;
+                                    }
+                                }).blockingFirst();
+                    }
+                }).map(new Function<Map<String, Object>, RecordStatistics>() {
+
+                    @Override
+                    public RecordStatistics apply(Map<String, Object> stringObjectMap) {
+                        Integer[] data = (Integer[]) stringObjectMap.get("data");
+                        final Catalog catalog = (Catalog) stringObjectMap.get("catalog");
+                        return mRecordDao.queryRecordTotal(start, end, data)
+                                .observeOn(Schedulers.io())
+                                .map(new Function<Double, RecordStatistics>() {
+
+                                    @Override
+                                    public RecordStatistics apply(Double aDouble) {
+                                        RecordStatistics recordStatistics = new RecordStatistics();
+                                        recordStatistics.catalog = catalog.id;
+                                        recordStatistics.catalogName = catalog.name;
+                                        recordStatistics.type = catalog.style;
+                                        recordStatistics.num = aDouble;
+                                        return recordStatistics;
+                                    }
+                                }).blockingGet();
+                    }
+                }).subscribe(new Consumer<RecordStatistics>() {
+                    @Override
+                    public void accept(RecordStatistics recordStatistics) {
+                        data.add(recordStatistics);
                     }
                 });
-
-        mCatalogDao.queryCatalogAll(0)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Catalog>>() {
-                    @Override
-                    public void accept(List<Catalog> catalogs) {
-                        mView.displayChart();
-                    }
-                });
-
     }
 }

@@ -50,6 +50,12 @@ public interface RecordDao {
             "and records.time < :start and records.time > :end ")
     Flowable<List<RecordStatistics>> queryRecordStatistics(long start, long end, int parentId);
 
+    @Query("select count(records.num) " +
+            "from records " +
+            "where records.type_id in (:id) " +
+            "and records.time < :start and records.time > :end ")
+    Maybe<Double> queryRecordTotal(long start, long end, Integer... id);
+
     @Query("select * from records where id = :id")
     Maybe<Record> queryRecord(long id);
 
