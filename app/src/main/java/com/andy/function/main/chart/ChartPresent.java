@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -57,13 +58,14 @@ public class ChartPresent implements ChartContract.Present, LifecycleObserver {
     @Override
     public void getCatalog(final long start, final long end, int id) {
         final List<RecordStatistics> data = new ArrayList<>();
-
+        final int[] size = {0};
         mGetCatalog = mCatalogDao.queryCatalogList(id)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.io())
                 .flatMap(new Function<List<Catalog>, Publisher<Catalog>>() {
                     @Override
                     public Publisher<Catalog> apply(List<Catalog> catalogs) {
+                        size[0] = catalogs.size();
                         return Flowable.fromIterable(catalogs);
                     }
                 }).map(new Function<Catalog, Map<String, Object>>() {
@@ -76,9 +78,10 @@ public class ChartPresent implements ChartContract.Present, LifecycleObserver {
 
                                     @Override
                                     public Map<String, Object> apply(List<Catalog> catalogs) {
-                                        Integer[] data = new Integer[catalogs.size()];
+                                        Integer[] data = new Integer[catalogs.size() + 1];
+                                        data[0] = catalog.id;
                                         for (int i = 0; i < catalogs.size(); i++) {
-                                            data[i] = catalogs.get(i).id;
+                                            data[i + 1] = catalogs.get(i).id;
                                         }
                                         Map<String, Object> map = new HashMap<>();
                                         map.put("data", data);
@@ -108,10 +111,14 @@ public class ChartPresent implements ChartContract.Present, LifecycleObserver {
                                     }
                                 }).blockingGet();
                     }
-                }).subscribe(new Consumer<RecordStatistics>() {
+                }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<RecordStatistics>() {
                     @Override
                     public void accept(RecordStatistics recordStatistics) {
                         data.add(recordStatistics);
+                        if (data.size() == size[0]) {
+                            mView.displayChart(data);
+                        }
                     }
                 });
     }

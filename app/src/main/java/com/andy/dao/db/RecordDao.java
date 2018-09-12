@@ -50,7 +50,7 @@ public interface RecordDao {
             "and records.time < :start and records.time > :end ")
     Flowable<List<RecordStatistics>> queryRecordStatistics(long start, long end, int parentId);
 
-    @Query("select count(records.num) " +
+    @Query("select total(records.num) " +
             "from records " +
             "where records.type_id in (:id) " +
             "and records.time < :start and records.time > :end ")

@@ -1,11 +1,19 @@
 package com.andy.function.main.chart;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.andy.BaseFragment;
 import com.andy.R;
+import com.andy.dao.db.entity.RecordStatistics;
+import com.andy.function.main.chart.adapter.ChartAdapter;
+import com.andy.function.main.chart.entity.PieContent;
 import com.andy.function.main.chart.view.PieChart;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Andy on 2018/8/29.
@@ -20,13 +28,22 @@ public class ChartFragment extends BaseFragment implements ChartContract.View {
     private TextView vTitle;
 
     private PieChart vPieChart;
+    private RecyclerView vList;
+
     private ChartPresent mPresent;
+    private ChartAdapter mAdapter;
+
     @Override
     protected void initView(View view) {
         vTitle = view.findViewById(R.id.title);
         vTitle.setText(R.string.main_chart);
 
         vPieChart = view.findViewById(R.id.chart);
+
+        vList = view.findViewById(R.id.list);
+        vList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAdapter = new ChartAdapter(getActivity(), mData, mTotal);
+        vList.setAdapter(mAdapter);
 
         mPresent = new ChartPresent(this);
         getLifecycle().addObserver(mPresent);
@@ -38,8 +55,25 @@ public class ChartFragment extends BaseFragment implements ChartContract.View {
 
     }
 
+    private double mTotal = 0.0;
+    private List<RecordStatistics> mData = new ArrayList<>();
     @Override
-    public void displayChart() {
+    public void displayChart(List<RecordStatistics> data) {
+        mData.clear();
+        mData.addAll(data);
+        mTotal = 0.0;
+        PieContent[] pies = new PieContent[data.size()];
+        for (int i = 0; i < data.size(); i++) {
+            PieContent content = new PieContent();
+            RecordStatistics recordStatistics = data.get(i);
+            mTotal += recordStatistics.num;
+            content.setNum(recordStatistics.num);
+            content.setContent(recordStatistics.catalogName);
+            pies[i] = content;
+        }
+        mAdapter.setTotal(mTotal);
+        mAdapter.notifyDataSetChanged();
+        vPieChart.setData(pies);
 
     }
 }

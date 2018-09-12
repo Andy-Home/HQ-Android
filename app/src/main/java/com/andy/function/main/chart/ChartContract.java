@@ -1,5 +1,9 @@
 package com.andy.function.main.chart;
 
+import com.andy.dao.db.entity.RecordStatistics;
+
+import java.util.List;
+
 /**
  * Created by Andy on 2018/9/10.
  * Modify time 2018/9/10
@@ -7,7 +11,7 @@ package com.andy.function.main.chart;
 public class ChartContract {
 
     public interface View {
-        void displayChart();
+        void displayChart(List<RecordStatistics> data);
     }
 
     public interface Present {

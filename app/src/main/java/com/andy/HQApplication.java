@@ -3,6 +3,7 @@ package com.andy;
 import android.app.Application;
 
 import com.andy.dao.db.DBManage;
+import com.andy.utils.DPValueUtil;
 
 /**
  * Created by Andy on 2018/8/28.
@@ -15,5 +16,6 @@ public class HQApplication extends Application{
         super.onCreate();
 
         DBManage.getInstance().init(getApplicationContext());
+        DPValueUtil.getInstance().init(getApplicationContext());
     }
 }
