@@ -50,6 +50,7 @@
     <string name="relative_head_img">关系人头像</string>
     <string name="default_right">默认指右图像</string>
     <string name="edit_img_desc">编辑</string>
+    <string name="qq_login_desc">QQ登录</string>
 
     <string name="title">标题</string>
     <string name="back">返回</string>
