@@ -170,4 +170,9 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
         mData.addAll(list);
         mAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onError(String msg) {
+        ToastUtils.shortShow(this, msg);
+    }
 }

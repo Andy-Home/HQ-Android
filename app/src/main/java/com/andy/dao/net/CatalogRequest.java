@@ -7,7 +7,7 @@ import retrofit2.http.Query;
 public interface CatalogRequest {
 
     @GET("catalog/getCatalogs")
-    Observable<Response> getCatalogs(@Query("catalogId") int catalogId, @Query("userId") int userId);
+    Observable<Response> getCatalogs(@Query("parentId") int catalogId, @Query("userId") int userId);
 
     @GET("catalog/sync")
     Observable<Response> sync(@Query("userId") int userId);

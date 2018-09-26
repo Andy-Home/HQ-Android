@@ -16,5 +16,7 @@ public class CatalogContract {
 
     public interface View{
         void displayCatalogs(ArrayList<Catalog> list);
+
+        void onError(String msg);
     }
 }

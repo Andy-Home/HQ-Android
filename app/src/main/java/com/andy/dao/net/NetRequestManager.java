@@ -13,7 +13,7 @@ public class NetRequestManager {
         return SingleHolder.mInstance;
     }
 
-    private static class SingleHolder {
+    static class SingleHolder {
         final static NetRequestManager mInstance = new NetRequestManager();
     }
 
@@ -21,7 +21,7 @@ public class NetRequestManager {
 
     private void init() {
         mRetrofit = new Retrofit.Builder()
-                .baseUrl("https://www.andyclanguage.cn/HQ")
+                .baseUrl("https://www.andyclanguage.cn/HQ/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
