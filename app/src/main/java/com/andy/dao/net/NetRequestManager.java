@@ -1,6 +1,7 @@
 package com.andy.dao.net;
 
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class NetRequestManager {
@@ -21,6 +22,7 @@ public class NetRequestManager {
     private void init() {
         mRetrofit = new Retrofit.Builder()
                 .baseUrl("https://www.andyclanguage.cn/HQ")
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
     }
