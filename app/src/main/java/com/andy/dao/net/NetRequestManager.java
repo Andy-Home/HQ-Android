@@ -21,6 +21,7 @@ public class NetRequestManager {
 
     private void init() {
         mRetrofit = new Retrofit.Builder()
+                //.baseUrl("http://192.168.6.103:8080/")
                 .baseUrl("https://www.andyclanguage.cn/HQ/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
@@ -34,5 +35,14 @@ public class NetRequestManager {
             mCatalogRequest = mRetrofit.create(CatalogRequest.class);
         }
         return mCatalogRequest;
+    }
+
+    private RecordRequest mRecordRequest;
+
+    public RecordRequest getRecordRequest() {
+        if (mRecordRequest == null) {
+            mRecordRequest = mRetrofit.create(RecordRequest.class);
+        }
+        return mRecordRequest;
     }
 }

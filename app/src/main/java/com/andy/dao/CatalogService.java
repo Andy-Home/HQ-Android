@@ -5,6 +5,7 @@ import android.util.Log;
 import com.andy.dao.db.CatalogDao;
 import com.andy.dao.db.DBManage;
 import com.andy.dao.db.entity.Catalog;
+import com.andy.dao.db.entity.RecordStatistics;
 import com.andy.dao.net.CatalogRequest;
 import com.andy.dao.net.NetRequestManager;
 import com.andy.dao.net.Response;
@@ -12,17 +13,26 @@ import com.andy.utils.SharedPreferencesUtils;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Flowable;
+import io.reactivex.FlowableSubscriber;
+import io.reactivex.MaybeObserver;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class CatalogService {
@@ -41,14 +51,14 @@ public class CatalogService {
 
     private CatalogDao mCatalogDao;
     private CatalogRequest mCatalogRequest;
-
+    private SharedPreferencesUtils utils = null;
     private void init() {
         mCatalogDao = DBManage.getInstance().getCatalogDao();
         mCatalogRequest = NetRequestManager.getInstance().getCatalogRequest();
+        utils = SharedPreferencesUtils.getInstance();
     }
 
     public void getCatalogList(int parentId, final GetListListener listener) {
-        final SharedPreferencesUtils utils = SharedPreferencesUtils.getInstance();
         long time = utils.getCatalogModifyTime();
         if (time + 86400000 > System.currentTimeMillis()) {
             Log.d(TAG, "db getCatalogList");
@@ -119,28 +129,28 @@ public class CatalogService {
                                             mCatalogDao.insert(catalog);
                                         }
                                     }
+
+                                    utils.putCatalogModifyTime(System.currentTimeMillis());
+                                    listener.onSuccess(catalogs);
                                     onComplete();
                                 } catch (IOException e) {
                                     e.printStackTrace();
-                                    listener.onError("parse error");
+                                    onError(new Throwable(e.getCause()));
                                 }
                             } else {
-                                String msg = response.getMsg();
-                                listener.onError(msg);
+                                onError(new Throwable(response.getMsg()));
                             }
                         }
 
                         @Override
                         public void onError(Throwable e) {
                             Log.e(TAG, "getCatalogList", e);
-                            listener.onError("request error");
+                            listener.onError(e.getMessage());
                             d.dispose();
                         }
 
                         @Override
                         public void onComplete() {
-                            utils.putCatalogModifyTime(System.currentTimeMillis());
-                            listener.onSuccess(catalogs);
                             d.dispose();
                         }
                     });
@@ -152,5 +162,225 @@ public class CatalogService {
         void onSuccess(ArrayList<Catalog> data);
 
         void onError(String msg);
+    }
+
+    public void newCatalog(final Catalog catalog, final BaseListener listener) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("parentId", catalog.parentId);
+            jsonObject.put("userId", catalog.userId);
+            jsonObject.put("name", catalog.name);
+            jsonObject.put("type", catalog.style);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            listener.onError("can not cast to json");
+        }
+        Log.d(TAG, "net newCatalog");
+        mCatalogRequest.newCatalog(jsonObject.toString())
+                .subscribeOn(Schedulers.io())
+                .doOnComplete(new Action() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "db newCatalog");
+                        mCatalogDao.insert(catalog);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Response>() {
+                    Disposable d;
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        this.d = d;
+                    }
+
+                    @Override
+                    public void onNext(Response response) {
+                        if (response.getCode() == 0) {
+                            int id = (int) response.getResult();
+                            catalog.id = id;
+                            listener.onSuccess(id);
+                            onComplete();
+                        } else {
+                            onError(new Throwable(response.getMsg()));
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "newCatalog", e);
+                        listener.onError(e.getMessage());
+                        d.dispose();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        d.dispose();
+                    }
+                });
+    }
+
+    public void deleteCatalog(final Catalog catalog, final BaseListener listener) {
+        Log.d(TAG, "net deleteCatalog");
+        mCatalogRequest.deleteCatalog(catalog.id, utils.getUserId())
+                .subscribeOn(Schedulers.io())
+                .doOnComplete(new Action() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "db deleteCatalog");
+                        mCatalogDao.deleteCatalog(catalog);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Response>() {
+                    Disposable d;
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        this.d = d;
+                    }
+
+                    @Override
+                    public void onNext(Response response) {
+                        if (response.getCode() == 0) {
+                            listener.onSuccess();
+                        } else {
+                            onError(new Throwable(response.getMsg()));
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "deleteCatalog", e);
+                        listener.onError(e.getMessage());
+                        d.dispose();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        d.dispose();
+                    }
+                });
+    }
+
+    public void getCatalog(int id, final BaseListener listener) {
+        Log.d(TAG, "db getCatalog");
+        mCatalogDao.queryCatalog(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MaybeObserver<Catalog>() {
+                    Disposable d;
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        this.d = d;
+                    }
+
+                    @Override
+                    public void onSuccess(Catalog catalog) {
+                        listener.onSuccess(catalog);
+                        onComplete();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "getCatalog", e);
+                        listener.onError(e.getMessage());
+                        d.dispose();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        d.dispose();
+                    }
+                });
+    }
+
+    public void getCatalog(final long start, final long end, int id, final BaseListener listener) {
+
+        final List<RecordStatistics> data = new ArrayList<>();
+        final int[] size = {0};
+        mCatalogDao.queryCatalogList(id)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<List<Catalog>, Publisher<Catalog>>() {
+                    @Override
+                    public Publisher<Catalog> apply(List<Catalog> catalogs) {
+                        size[0] = catalogs.size();
+                        return Flowable.fromIterable(catalogs);
+                    }
+                }).map(new Function<Catalog, Map<String, Object>>() {
+
+            @Override
+            public Map<String, Object> apply(final Catalog catalog) {
+                return mCatalogDao.queryCatalogAll(catalog.id)
+                        .observeOn(Schedulers.io())
+                        .map(new Function<List<Catalog>, Map<String, Object>>() {
+
+                            @Override
+                            public Map<String, Object> apply(List<Catalog> catalogs) {
+                                Integer[] data = new Integer[catalogs.size() + 1];
+                                data[0] = catalog.id;
+                                for (int i = 0; i < catalogs.size(); i++) {
+                                    data[i + 1] = catalogs.get(i).id;
+                                }
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("data", data);
+                                map.put("catalog", catalog);
+                                return map;
+                            }
+                        }).blockingFirst();
+            }
+        }).map(new Function<Map<String, Object>, RecordStatistics>() {
+
+            @Override
+            public RecordStatistics apply(Map<String, Object> stringObjectMap) {
+                Integer[] data = (Integer[]) stringObjectMap.get("data");
+                final Catalog catalog = (Catalog) stringObjectMap.get("catalog");
+                return DBManage.getInstance().getRecordDao().queryRecordTotal(start, end, data)
+                        .observeOn(Schedulers.io())
+                        .map(new Function<Double, RecordStatistics>() {
+
+                            @Override
+                            public RecordStatistics apply(Double aDouble) {
+                                RecordStatistics recordStatistics = new RecordStatistics();
+                                recordStatistics.catalog = catalog.id;
+                                recordStatistics.catalogName = catalog.name;
+                                recordStatistics.type = catalog.style;
+                                recordStatistics.num = aDouble;
+                                return recordStatistics;
+                            }
+                        }).blockingGet();
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new FlowableSubscriber<RecordStatistics>() {
+                    Subscription s;
+
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        this.s = s;
+                        s.request(Long.MAX_VALUE);
+                    }
+
+                    @Override
+                    public void onNext(RecordStatistics recordStatistics) {
+                        data.add(recordStatistics);
+                        if (data.size() == size[0]) {
+                            listener.onSuccess(data);
+                            onComplete();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.e(TAG, "getCatalog", t);
+                        listener.onError(t.getMessage());
+                        s.cancel();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        s.cancel();
+                    }
+                });
     }
 }

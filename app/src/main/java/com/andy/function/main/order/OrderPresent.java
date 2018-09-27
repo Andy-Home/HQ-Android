@@ -4,17 +4,11 @@ import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 
-import com.andy.dao.db.DBManage;
-import com.andy.dao.db.RecordDao;
+import com.andy.dao.BaseListener;
+import com.andy.dao.DaoManager;
 import com.andy.dao.db.entity.RecordContent;
 
-import java.util.Calendar;
 import java.util.List;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class OrderPresent implements OrderContract.Present, LifecycleObserver {
     private OrderContract.View mView;
@@ -24,42 +18,34 @@ public class OrderPresent implements OrderContract.Present, LifecycleObserver {
         init();
     }
 
-    private RecordDao mRecordDao;
+    private DaoManager mDaoManager;
 
     private void init() {
-        mRecordDao = DBManage.getInstance().getRecordDao();
+        mDaoManager = DaoManager.getInstance();
+        mDaoManager.initRecordService();
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    public void onPause() {
-        if (mGetRecords != null && !mGetRecords.isDisposed()) {
-            mGetRecords.dispose();
-        }
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    public void onStop() {
+        mView = null;
     }
-
-    private Disposable mGetRecords = null;
 
     @Override
-    public void getRecords(long startTime, long endTime, final int num) {
-        mGetRecords = mRecordDao.queryRecordContents(startTime, endTime, num)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<RecordContent>>() {
-                    @Override
-                    public void accept(List<RecordContent> records) {
-                        Calendar calendar = null;
+    public void getRecords(long startTime, long endTime, int num) {
+        mDaoManager.mRecordService.getRecordList(startTime, new BaseListener() {
+            @Override
+            public void onSuccess(Object... o) {
+                if (mView != null) {
+                    mView.displayRecords((List<RecordContent>) o[0]);
+                }
+            }
 
-                        for (RecordContent content : records) {
-                            Calendar temp = Calendar.getInstance();
-                            temp.setTimeInMillis(content.time);
-                            if (calendar == null || calendar.get(Calendar.DAY_OF_MONTH) != temp.get(Calendar.DAY_OF_MONTH)) {
-                                calendar = temp;
-                                content.status = 1;
-                            }
-                        }
-                        mView.displayRecords(records);
-                    }
-                });
+            @Override
+            public void onError(String msg) {
+                if (mView != null) {
+                    mView.onError(msg);
+                }
+            }
+        });
     }
 }

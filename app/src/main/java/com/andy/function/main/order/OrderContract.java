@@ -14,5 +14,7 @@ public class OrderContract {
     public interface View {
 
         void displayRecords(List<RecordContent> data);
+
+        void onError(String msg);
     }
 }

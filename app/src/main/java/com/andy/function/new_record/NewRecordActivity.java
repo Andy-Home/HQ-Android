@@ -81,11 +81,14 @@ public class NewRecordActivity extends BaseActivity implements NewRecordContract
 
         vMoney = findViewById(R.id.money);
         vType = findViewById(R.id.text);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         mPresent = new NewRecordPresent(this);
         getLifecycle().addObserver(mPresent);
     }
-
 
     @Override
     protected void setListener() {
@@ -189,6 +192,11 @@ public class NewRecordActivity extends BaseActivity implements NewRecordContract
     @Override
     public void saveRecordSuccess() {
         finish();
+    }
+
+    @Override
+    public void onError(String msg) {
+        ToastUtils.shortShow(this, msg);
     }
 
     private void createTypeView(final int position) {

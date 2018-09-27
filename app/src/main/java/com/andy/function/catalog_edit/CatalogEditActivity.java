@@ -52,8 +52,6 @@ public class CatalogEditActivity extends BaseActivity implements CatalogEditCont
         mCurrentId = dataIntent.getIntExtra("currentId", -1);
 
         mParentName = dataIntent.getStringExtra("parentName");
-        mPresent = new CatalogEditPresent(this, this);
-        getLifecycle().addObserver(mPresent);
     }
 
     @Override
@@ -96,7 +94,13 @@ public class CatalogEditActivity extends BaseActivity implements CatalogEditCont
         }
 
         vName = findViewById(R.id.name);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresent = new CatalogEditPresent(this, this);
+        getLifecycle().addObserver(mPresent);
         if(status == EDIT){
             mPresent.getCatalog(mCurrentId);
         }
@@ -114,6 +118,7 @@ public class CatalogEditActivity extends BaseActivity implements CatalogEditCont
         vFun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                vFun.setClickable(false);
                 Catalog catalog = new Catalog();
                 if(status == EDIT){
                     catalog.id = mCurrentId;
@@ -160,5 +165,11 @@ public class CatalogEditActivity extends BaseActivity implements CatalogEditCont
             vType.setChecked(true);
         }
 
+    }
+
+    @Override
+    public void onError(String msg) {
+        vFun.setClickable(true);
+        ToastUtils.shortShow(this, msg);
     }
 }

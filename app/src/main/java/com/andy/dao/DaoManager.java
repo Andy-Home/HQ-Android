@@ -19,4 +19,12 @@ public class DaoManager {
             mCatalogService = CatalogService.getInstance();
         }
     }
+
+    public RecordService mRecordService;
+
+    public void initRecordService() {
+        if (mRecordService == null) {
+            mRecordService = RecordService.getInstance();
+        }
+    }
 }

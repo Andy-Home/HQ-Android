@@ -22,5 +22,7 @@ public class CatalogEditContract {
         void deleteSuccess();
 
         void displayCatalog(Catalog catalog);
+
+        void onError(String msg);
     }
 }

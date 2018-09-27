@@ -26,5 +26,7 @@ public class NewRecordContract {
         void showCatalogWindow(View view, List<CatalogItem> data);
 
         void saveRecordSuccess();
+
+        void onError(String msg);
     }
 }

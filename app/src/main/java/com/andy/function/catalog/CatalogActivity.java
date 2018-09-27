@@ -51,9 +51,6 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
         }
 
         mParentName = dataIntent.getStringExtra("parentName");
-
-        mPresent = new CatalogPresent(this, this);
-        getLifecycle().addObserver(mPresent);
     }
 
     @Override
@@ -157,6 +154,8 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
     @Override
     protected void onResume() {
         super.onResume();
+        mPresent = new CatalogPresent(this, this);
+        getLifecycle().addObserver(mPresent);
         mPresent.getCatalogs(mParentId, MainActivity.getUserId());
     }
 

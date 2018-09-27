@@ -11,6 +11,7 @@ import com.andy.dao.db.entity.RecordStatistics;
 import com.andy.function.main.chart.adapter.ChartAdapter;
 import com.andy.function.main.chart.entity.PieContent;
 import com.andy.function.main.chart.view.PieChart;
+import com.andy.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,15 +45,19 @@ public class ChartFragment extends BaseFragment implements ChartContract.View {
         vList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new ChartAdapter(getActivity(), mData, mTotal);
         vList.setAdapter(mAdapter);
-
-        mPresent = new ChartPresent(this);
-        getLifecycle().addObserver(mPresent);
-        mPresent.getCatalog(System.currentTimeMillis(), 0, 0);
     }
 
     @Override
     protected void setListener() {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresent = new ChartPresent(this);
+        getLifecycle().addObserver(mPresent);
+        mPresent.getCatalog(System.currentTimeMillis(), 0, 0);
     }
 
     private double mTotal = 0.0;
@@ -75,5 +80,10 @@ public class ChartFragment extends BaseFragment implements ChartContract.View {
         mAdapter.notifyDataSetChanged();
         vPieChart.setData(pies);
 
+    }
+
+    @Override
+    public void onError(String msg) {
+        ToastUtils.shortShow(getContext(), msg);
     }
 }

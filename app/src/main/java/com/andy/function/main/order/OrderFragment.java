@@ -12,6 +12,7 @@ import com.andy.R;
 import com.andy.dao.db.entity.RecordContent;
 import com.andy.function.main.order.adpter.OrderAdapter;
 import com.andy.function.new_record.NewRecordActivity;
+import com.andy.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,11 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
         vList.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new OrderAdapter(mData, getContext());
         vList.setAdapter(mAdapter);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
         mPresent = new OrderPresent(this);
         mData.clear();
         mPresent.getRecords(System.currentTimeMillis(), 0, 10);
@@ -80,5 +85,11 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
         mData.addAll(data);
         mAdapter.notifyDataSetChanged();
         vRefresh.setRefreshing(false);
+    }
+
+    @Override
+    public void onError(String msg) {
+        vRefresh.setRefreshing(false);
+        ToastUtils.shortShow(getContext(), msg);
     }
 }

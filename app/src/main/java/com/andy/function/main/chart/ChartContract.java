@@ -12,6 +12,8 @@ public class ChartContract {
 
     public interface View {
         void displayChart(List<RecordStatistics> data);
+
+        void onError(String msg);
     }
 
     public interface Present {

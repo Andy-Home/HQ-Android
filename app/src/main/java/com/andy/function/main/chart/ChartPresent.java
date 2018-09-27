@@ -4,25 +4,11 @@ import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 
-import com.andy.dao.db.CatalogDao;
-import com.andy.dao.db.DBManage;
-import com.andy.dao.db.RecordDao;
-import com.andy.dao.db.entity.Catalog;
+import com.andy.dao.BaseListener;
+import com.andy.dao.DaoManager;
 import com.andy.dao.db.entity.RecordStatistics;
 
-import org.reactivestreams.Publisher;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Andy on 2018/9/10.
@@ -36,90 +22,34 @@ public class ChartPresent implements ChartContract.Present, LifecycleObserver {
         init();
     }
 
-    private RecordDao mRecordDao;
-    private CatalogDao mCatalogDao;
+    private DaoManager mDaoManager;
 
     private void init() {
-        DBManage dbManage = DBManage.getInstance();
-
-        mRecordDao = dbManage.getRecordDao();
-        mCatalogDao = dbManage.getCatalogDao();
+        mDaoManager = DaoManager.getInstance();
+        mDaoManager.initCatalogService();
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    public void onPause() {
-        if (mGetCatalog != null && !mGetCatalog.isDisposed()) {
-            mGetCatalog.dispose();
-        }
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    public void onStop() {
+        mView = null;
     }
-
-    private Disposable mGetCatalog = null;
 
     @Override
-    public void getCatalog(final long start, final long end, int id) {
-        final List<RecordStatistics> data = new ArrayList<>();
-        final int[] size = {0};
-        mGetCatalog = mCatalogDao.queryCatalogList(id)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.io())
-                .flatMap(new Function<List<Catalog>, Publisher<Catalog>>() {
-                    @Override
-                    public Publisher<Catalog> apply(List<Catalog> catalogs) {
-                        size[0] = catalogs.size();
-                        return Flowable.fromIterable(catalogs);
-                    }
-                }).map(new Function<Catalog, Map<String, Object>>() {
+    public void getCatalog(long start, long end, int id) {
+        mDaoManager.mCatalogService.getCatalog(start, end, id, new BaseListener() {
+            @Override
+            public void onSuccess(Object... o) {
+                if (mView != null) {
+                    mView.displayChart((List<RecordStatistics>) o[0]);
+                }
+            }
 
-                    @Override
-                    public Map<String, Object> apply(final Catalog catalog) {
-                        return mCatalogDao.queryCatalogAll(catalog.id)
-                                .observeOn(Schedulers.io())
-                                .map(new Function<List<Catalog>, Map<String, Object>>() {
-
-                                    @Override
-                                    public Map<String, Object> apply(List<Catalog> catalogs) {
-                                        Integer[] data = new Integer[catalogs.size() + 1];
-                                        data[0] = catalog.id;
-                                        for (int i = 0; i < catalogs.size(); i++) {
-                                            data[i + 1] = catalogs.get(i).id;
-                                        }
-                                        Map<String, Object> map = new HashMap<>();
-                                        map.put("data", data);
-                                        map.put("catalog", catalog);
-                                        return map;
-                                    }
-                                }).blockingFirst();
-                    }
-                }).map(new Function<Map<String, Object>, RecordStatistics>() {
-
-                    @Override
-                    public RecordStatistics apply(Map<String, Object> stringObjectMap) {
-                        Integer[] data = (Integer[]) stringObjectMap.get("data");
-                        final Catalog catalog = (Catalog) stringObjectMap.get("catalog");
-                        return mRecordDao.queryRecordTotal(start, end, data)
-                                .observeOn(Schedulers.io())
-                                .map(new Function<Double, RecordStatistics>() {
-
-                                    @Override
-                                    public RecordStatistics apply(Double aDouble) {
-                                        RecordStatistics recordStatistics = new RecordStatistics();
-                                        recordStatistics.catalog = catalog.id;
-                                        recordStatistics.catalogName = catalog.name;
-                                        recordStatistics.type = catalog.style;
-                                        recordStatistics.num = aDouble;
-                                        return recordStatistics;
-                                    }
-                                }).blockingGet();
-                    }
-                }).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<RecordStatistics>() {
-                    @Override
-                    public void accept(RecordStatistics recordStatistics) {
-                        data.add(recordStatistics);
-                        if (data.size() == size[0]) {
-                            mView.displayChart(data);
-                        }
-                    }
-                });
+            @Override
+            public void onError(String msg) {
+                if (mView != null) {
+                    mView.onError(msg);
+                }
+            }
+        });
     }
 }
