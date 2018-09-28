@@ -4,6 +4,7 @@ package com.andy.function.new_record;
 import android.view.View;
 
 import com.andy.dao.db.entity.Record;
+import com.andy.function.BaseView;
 import com.andy.function.new_record.entity.CatalogItem;
 
 import java.util.List;
@@ -21,12 +22,10 @@ public class NewRecordContract {
         void saveRecord(Record record);
     }
 
-    public interface Views {
+    public interface Views extends BaseView {
 
         void showCatalogWindow(View view, List<CatalogItem> data);
 
         void saveRecordSuccess();
-
-        void onError(String msg);
     }
 }

@@ -27,4 +27,12 @@ public class DaoManager {
             mRecordService = RecordService.getInstance();
         }
     }
+
+    public UserService mUserService;
+
+    public void initUserService() {
+        if (mUserService == null) {
+            mUserService = UserService.getInstance();
+        }
+    }
 }

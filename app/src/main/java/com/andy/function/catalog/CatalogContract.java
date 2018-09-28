@@ -1,6 +1,7 @@
 package com.andy.function.catalog;
 
 import com.andy.dao.db.entity.Catalog;
+import com.andy.function.BaseView;
 
 import java.util.ArrayList;
 
@@ -14,9 +15,7 @@ public class CatalogContract {
         void getCatalogs(int parentId, int userId);
     }
 
-    public interface View{
+    public interface View extends BaseView {
         void displayCatalogs(ArrayList<Catalog> list);
-
-        void onError(String msg);
     }
 }

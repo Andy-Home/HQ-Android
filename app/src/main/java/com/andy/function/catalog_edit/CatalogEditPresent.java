@@ -35,11 +35,11 @@ public class CatalogEditPresent implements CatalogEditContract.Present, Lifecycl
 
     @Override
     public void getCatalog(int id) {
-        mDaoManager.mCatalogService.getCatalog(id, new BaseListener() {
+        mDaoManager.mCatalogService.getCatalog(id, new BaseListener<Catalog>() {
             @Override
-            public void onSuccess(Object... o) {
+            public void onSuccess(Catalog o) {
                 if (mView != null) {
-                    mView.displayCatalog((Catalog) o[0]);
+                    mView.displayCatalog(o);
                 }
             }
 
@@ -54,9 +54,9 @@ public class CatalogEditPresent implements CatalogEditContract.Present, Lifecycl
 
     @Override
     public void save(final Catalog catalog) {
-        mDaoManager.mCatalogService.newCatalog(catalog, new BaseListener() {
+        mDaoManager.mCatalogService.newCatalog(catalog, new BaseListener<Object>() {
             @Override
-            public void onSuccess(Object... o) {
+            public void onSuccess(Object o) {
                 if (mView != null) {
                     mView.saveSuccess();
                 }
@@ -73,9 +73,10 @@ public class CatalogEditPresent implements CatalogEditContract.Present, Lifecycl
 
     @Override
     public void delete(final Catalog catalog) {
-        mDaoManager.mCatalogService.deleteCatalog(catalog, new BaseListener() {
+        mDaoManager.mCatalogService.deleteCatalog(catalog, new BaseListener<Object>() {
+
             @Override
-            public void onSuccess(Object... o) {
+            public void onSuccess(Object o) {
                 if (mView != null) {
                     mView.deleteSuccess();
                 }

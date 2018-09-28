@@ -58,7 +58,7 @@ public class CatalogService {
         utils = SharedPreferencesUtils.getInstance();
     }
 
-    public void getCatalogList(int parentId, final GetListListener listener) {
+    public void getCatalogList(int parentId, final BaseListener<ArrayList<Catalog>> listener) {
         long time = utils.getCatalogModifyTime();
         if (time + 86400000 > System.currentTimeMillis()) {
             Log.d(TAG, "db getCatalogList");
@@ -158,12 +158,6 @@ public class CatalogService {
 
     }
 
-    public interface GetListListener {
-        void onSuccess(ArrayList<Catalog> data);
-
-        void onError(String msg);
-    }
-
     public void newCatalog(final Catalog catalog, final BaseListener listener) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -220,7 +214,7 @@ public class CatalogService {
                 });
     }
 
-    public void deleteCatalog(final Catalog catalog, final BaseListener listener) {
+    public void deleteCatalog(final Catalog catalog, final BaseListener<Object> listener) {
         Log.d(TAG, "net deleteCatalog");
         mCatalogRequest.deleteCatalog(catalog.id, utils.getUserId())
                 .subscribeOn(Schedulers.io())
@@ -242,7 +236,7 @@ public class CatalogService {
                     @Override
                     public void onNext(Response response) {
                         if (response.getCode() == 0) {
-                            listener.onSuccess();
+                            listener.onSuccess(null);
                         } else {
                             onError(new Throwable(response.getMsg()));
                         }
@@ -262,7 +256,7 @@ public class CatalogService {
                 });
     }
 
-    public void getCatalog(int id, final BaseListener listener) {
+    public void getCatalog(int id, final BaseListener<Catalog> listener) {
         Log.d(TAG, "db getCatalog");
         mCatalogDao.queryCatalog(id)
                 .subscribeOn(Schedulers.io())
@@ -295,7 +289,7 @@ public class CatalogService {
                 });
     }
 
-    public void getCatalog(final long start, final long end, int id, final BaseListener listener) {
+    public void getCatalog(final long start, final long end, int id, final BaseListener<List<RecordStatistics>> listener) {
 
         final List<RecordStatistics> data = new ArrayList<>();
         final int[] size = {0};

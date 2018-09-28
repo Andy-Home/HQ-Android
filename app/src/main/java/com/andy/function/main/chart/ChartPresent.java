@@ -36,11 +36,12 @@ public class ChartPresent implements ChartContract.Present, LifecycleObserver {
 
     @Override
     public void getCatalog(long start, long end, int id) {
-        mDaoManager.mCatalogService.getCatalog(start, end, id, new BaseListener() {
+        mDaoManager.mCatalogService.getCatalog(start, end, id, new BaseListener<List<RecordStatistics>>() {
+
             @Override
-            public void onSuccess(Object... o) {
+            public void onSuccess(List<RecordStatistics> recordStatistics) {
                 if (mView != null) {
-                    mView.displayChart((List<RecordStatistics>) o[0]);
+                    mView.displayChart(recordStatistics);
                 }
             }
 

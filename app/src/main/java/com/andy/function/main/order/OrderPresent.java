@@ -32,11 +32,12 @@ public class OrderPresent implements OrderContract.Present, LifecycleObserver {
 
     @Override
     public void getRecords(long startTime, long endTime, int num) {
-        mDaoManager.mRecordService.getRecordList(startTime, new BaseListener() {
+        mDaoManager.mRecordService.getRecordList(startTime, new BaseListener<List<RecordContent>>() {
+
             @Override
-            public void onSuccess(Object... o) {
+            public void onSuccess(List<RecordContent> recordContents) {
                 if (mView != null) {
-                    mView.displayRecords((List<RecordContent>) o[0]);
+                    mView.displayRecords((recordContents));
                 }
             }
 

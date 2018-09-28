@@ -49,7 +49,7 @@ public class RecordService {
         utils = SharedPreferencesUtils.getInstance();
     }
 
-    public void saveRecord(final Record record, final BaseListener listener) {
+    public void saveRecord(final Record record, final BaseListener<Object> listener) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("userId", record.userId);
@@ -76,7 +76,7 @@ public class RecordService {
                     public void onNext(Response response) {
                         if (response.getCode() == 0) {
                             record.id = (int) response.getResult();
-                            listener.onSuccess();
+                            listener.onSuccess(null);
                             onComplete();
                         } else {
                             onError(new Throwable(response.getMsg()));
@@ -97,7 +97,7 @@ public class RecordService {
                 });
     }
 
-    public void getRecordList(long startTime, final BaseListener listener) {
+    public void getRecordList(long startTime, final BaseListener<List<RecordContent>> listener) {
         mRecordRequest.getRecordList(utils.getUserId(), startTime)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

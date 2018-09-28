@@ -1,6 +1,7 @@
 package com.andy.function.main.order;
 
 import com.andy.dao.db.entity.RecordContent;
+import com.andy.function.BaseView;
 
 import java.util.List;
 
@@ -11,10 +12,8 @@ public class OrderContract {
         void getRecords(long startTime, long endTime, int num);
     }
 
-    public interface View {
+    public interface View extends BaseView {
 
         void displayRecords(List<RecordContent> data);
-
-        void onError(String msg);
     }
 }

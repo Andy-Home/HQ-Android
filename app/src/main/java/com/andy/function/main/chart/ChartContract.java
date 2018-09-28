@@ -1,6 +1,7 @@
 package com.andy.function.main.chart;
 
 import com.andy.dao.db.entity.RecordStatistics;
+import com.andy.function.BaseView;
 
 import java.util.List;
 
@@ -10,10 +11,8 @@ import java.util.List;
  */
 public class ChartContract {
 
-    public interface View {
+    public interface View extends BaseView {
         void displayChart(List<RecordStatistics> data);
-
-        void onError(String msg);
     }
 
     public interface Present {

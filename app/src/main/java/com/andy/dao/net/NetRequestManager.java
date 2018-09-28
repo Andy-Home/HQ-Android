@@ -45,4 +45,13 @@ public class NetRequestManager {
         }
         return mRecordRequest;
     }
+
+    private UserRequest mUserRequest;
+
+    public UserRequest getUserRequest() {
+        if (mUserRequest == null) {
+            mUserRequest = mRetrofit.create(UserRequest.class);
+        }
+        return mUserRequest;
+    }
 }

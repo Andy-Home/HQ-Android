@@ -6,7 +6,6 @@ import android.arch.lifecycle.OnLifecycleEvent;
 import android.view.View;
 
 import com.andy.dao.BaseListener;
-import com.andy.dao.CatalogService;
 import com.andy.dao.DaoManager;
 import com.andy.dao.db.entity.Catalog;
 import com.andy.dao.db.entity.Record;
@@ -42,7 +41,7 @@ public class NewRecordPresent implements NewRecordContract.Present, LifecycleObs
 
     @Override
     public void getCatalog(final View view, int id) {
-        mDaoManager.mCatalogService.getCatalogList(id, new CatalogService.GetListListener() {
+        mDaoManager.mCatalogService.getCatalogList(id, new BaseListener<ArrayList<Catalog>>() {
             @Override
             public void onSuccess(ArrayList<Catalog> data) {
                 if (mView == null) {
@@ -74,15 +73,20 @@ public class NewRecordPresent implements NewRecordContract.Present, LifecycleObs
 
     @Override
     public void saveRecord(final Record record) {
-        mDaoManager.mRecordService.saveRecord(record, new BaseListener() {
+        mDaoManager.mRecordService.saveRecord(record, new BaseListener<Object>() {
+
             @Override
-            public void onSuccess(Object... o) {
-                mView.saveRecordSuccess();
+            public void onSuccess(Object o) {
+                if (mView != null) {
+                    mView.saveRecordSuccess();
+                }
             }
 
             @Override
             public void onError(String msg) {
-                mView.onError(msg);
+                if (mView != null) {
+                    mView.onError(msg);
+                }
             }
         });
     }

@@ -5,7 +5,7 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 
-import com.andy.dao.CatalogService;
+import com.andy.dao.BaseListener;
 import com.andy.dao.DaoManager;
 import com.andy.dao.db.entity.Catalog;
 
@@ -40,7 +40,7 @@ public class CatalogPresent implements CatalogContract.Present, LifecycleObserve
 
     @Override
     public void getCatalogs(final int parentId, int userId) {
-        mDaoManager.mCatalogService.getCatalogList(parentId, new CatalogService.GetListListener() {
+        mDaoManager.mCatalogService.getCatalogList(parentId, new BaseListener<ArrayList<Catalog>>() {
             @Override
             public void onSuccess(ArrayList<Catalog> data) {
                 if (mView != null) {

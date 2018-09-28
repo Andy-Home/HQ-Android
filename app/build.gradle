@@ -47,7 +47,6 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-jackson:$retrofit"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
-
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
     testImplementation 'junit:junit:4.12'
@@ -55,4 +54,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
+    implementation files('libs/open_sdk_r6019_lite.jar')
 }

@@ -1,6 +1,7 @@
 package com.andy.function.catalog_edit;
 
 import com.andy.dao.db.entity.Catalog;
+import com.andy.function.BaseView;
 
 /**
  * Created by Andy on 2018/8/31.
@@ -16,13 +17,11 @@ public class CatalogEditContract {
         void delete(Catalog catalog);
     }
 
-    public interface View{
+    public interface View extends BaseView {
         void saveSuccess();
 
         void deleteSuccess();
 
         void displayCatalog(Catalog catalog);
-
-        void onError(String msg);
     }
 }
