@@ -16,6 +16,8 @@ public class LoginContract {
     }
 
     public interface Present {
+        void checkLogin(Activity activity);
+
         void QQLogin(Activity activity);
 
         void setResult(int requestCode, int resultCode, Intent data);

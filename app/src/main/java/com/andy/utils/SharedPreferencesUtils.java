@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Andy on 2018/9/26.
  * Modify time 2018/9/26
@@ -63,5 +66,41 @@ public class SharedPreferencesUtils {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong("userId", userId);
         editor.apply();
+    }
+
+    public void putLoginChannel(String channel) {
+        SharedPreferences preferences = mContext.getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("channel", channel);
+        editor.apply();
+    }
+
+    public String getLoginChannel() {
+        SharedPreferences preferences = mContext.getSharedPreferences("user", Context.MODE_PRIVATE);
+        return preferences.getString("channel", "");
+    }
+
+    public void putQQLoginStates(String token, String expires, String openId) {
+        SharedPreferences preferences = mContext.getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString("qq_login_token", token);
+        editor.putString("qq_login_expires", expires);
+        editor.putString("qq_login_openId", openId);
+
+        editor.apply();
+    }
+
+    public Map<String, String> getQQLoginStates() {
+        Map<String, String> map = new HashMap<>();
+        SharedPreferences preferences = mContext.getSharedPreferences("user", Context.MODE_PRIVATE);
+        String token = preferences.getString("qq_login_token", "");
+        String expires = preferences.getString("qq_login_expires", "");
+        String openId = preferences.getString("qq_login_openId", "");
+
+        map.put("token", token);
+        map.put("expires", expires);
+        map.put("openId", openId);
+        return map;
     }
 }

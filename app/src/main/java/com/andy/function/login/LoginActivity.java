@@ -41,6 +41,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     protected void onResume() {
         super.onResume();
         mPresent = new LoginPresent(this, this);
+        mPresent.checkLogin(this);
     }
 
     @Override

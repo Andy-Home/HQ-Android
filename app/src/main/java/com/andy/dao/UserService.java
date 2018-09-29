@@ -46,7 +46,7 @@ public class UserService {
         utils = SharedPreferencesUtils.getInstance();
     }
 
-    public void QQLogin(String openId, String accessToken, final BaseListener<Object> listener) {
+    public void QQLogin(String openId, String accessToken, final BaseListener<Integer> listener) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("channel", "QQ");
@@ -73,7 +73,7 @@ public class UserService {
                         if (response.getCode() == 0) {
                             int userId = (int) response.getResult();
                             utils.putUserId(userId);
-                            listener.onSuccess(null);
+                            listener.onSuccess(userId);
                             onComplete();
                         } else {
                             onError(new Throwable(response.getMsg()));
