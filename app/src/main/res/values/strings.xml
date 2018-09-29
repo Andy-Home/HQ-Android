@@ -44,6 +44,10 @@
     <string name="records_earnings">收</string>
     <string name="records_expenditure">支</string>
     <string name="records_data_desc">1995 &#8211; 04 &#8211; 15 周五</string>
+    <string name="records_no_data_tips">您还没有在本软件记账哦！赶快记一笔吧 :-) </string>
+
+    <!-- 图表页面 -->
+    <string name="chart_no_data_tips">还没记过帐，所以不能统计呢 </string>
 
     <!-- 图片描述信息 -->
     <string name="head_img_desc">个人头像</string>

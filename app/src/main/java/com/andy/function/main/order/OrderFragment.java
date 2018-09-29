@@ -1,5 +1,6 @@
 package com.andy.function.main.order;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,6 +38,7 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
     private List<RecordContent> mData = new ArrayList<>();
 
     private SwipeRefreshLayout vRefresh;
+    private ConstraintLayout vNoData;
     @Override
     protected void initView(View view) {
         vTitle = view.findViewById(R.id.title);
@@ -46,6 +48,9 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
 
         vRefresh = view.findViewById(R.id.refresh);
         vRefresh.setColorSchemeResources(R.color.mainColor);
+
+        vNoData = view.findViewById(R.id.no_order);
+        vNoData.setVisibility(View.GONE);
 
         vList = view.findViewById(R.id.list);
         vList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -58,6 +63,7 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
         super.onResume();
         mPresent = new OrderPresent(this);
         mData.clear();
+
         mPresent.getRecords(System.currentTimeMillis(), 0, 10);
         getLifecycle().addObserver(mPresent);
     }
@@ -84,6 +90,13 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
     public void displayRecords(List<RecordContent> data) {
         mData.addAll(data);
         mAdapter.notifyDataSetChanged();
+
+        if (mData.size() == 0) {
+            vNoData.setVisibility(View.VISIBLE);
+        } else {
+            vNoData.setVisibility(View.GONE);
+        }
+
         vRefresh.setRefreshing(false);
     }
 

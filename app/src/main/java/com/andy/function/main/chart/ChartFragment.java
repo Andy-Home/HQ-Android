@@ -1,5 +1,6 @@
 package com.andy.function.main.chart;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -34,12 +35,16 @@ public class ChartFragment extends BaseFragment implements ChartContract.View {
     private ChartPresent mPresent;
     private ChartAdapter mAdapter;
 
+    private ConstraintLayout vNoChart;
     @Override
     protected void initView(View view) {
         vTitle = view.findViewById(R.id.title);
         vTitle.setText(R.string.main_chart);
 
         vPieChart = view.findViewById(R.id.chart);
+
+        vNoChart = view.findViewById(R.id.no_chart);
+        vNoChart.setVisibility(View.VISIBLE);
 
         vList = view.findViewById(R.id.list);
         vList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -66,6 +71,14 @@ public class ChartFragment extends BaseFragment implements ChartContract.View {
     public void displayChart(List<RecordStatistics> data) {
         mData.clear();
         mData.addAll(data);
+
+        if (mData.size() == 0) {
+            vNoChart.setVisibility(View.VISIBLE);
+            return;
+        } else {
+            vNoChart.setVisibility(View.GONE);
+        }
+
         mTotal = 0.0;
         PieContent[] pies = new PieContent[data.size()];
         for (int i = 0; i < data.size(); i++) {
