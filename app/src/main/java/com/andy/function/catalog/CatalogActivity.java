@@ -2,7 +2,9 @@ package com.andy.function.catalog;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -66,6 +68,8 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
     private CatalogAdapter mAdapter = null;
     private ArrayList<Catalog> mData = new ArrayList<>();
 
+    private ConstraintLayout vNoData;
+    private SwipeRefreshLayout vRefresh;
     @Override
     protected void initView() {
         TextView vTitle = findViewById(R.id.title);
@@ -81,6 +85,11 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
         vToolbox = findViewById(R.id.toolbox);
         vEdit = findViewById(R.id.edit);
         vNewCatalog = findViewById(R.id.new_catalog);
+
+        vNoData = findViewById(R.id.no_catalog);
+
+        vRefresh = findViewById(R.id.refresh);
+        vRefresh.setColorSchemeResources(R.color.mainColor);
 
         vRecyclerView = findViewById(R.id.list);
         vRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -149,6 +158,13 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
                 }
             }
         });
+
+        vRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPresent.getCatalogs(mParentId, MainActivity.getUserId());
+            }
+        });
     }
 
     @Override
@@ -157,12 +173,20 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
         mPresent = new CatalogPresent(this, this);
         getLifecycle().addObserver(mPresent);
         mPresent.getCatalogs(mParentId, MainActivity.getUserId());
+        vRefresh.setRefreshing(true);
     }
 
     @Override
     public void displayCatalogs(ArrayList<Catalog> list) {
+        vRefresh.setRefreshing(false);
         if (list == null) {
             list = new ArrayList<>();
+        }
+
+        if (list.size() == 0) {
+            vNoData.setVisibility(View.VISIBLE);
+        } else {
+            vNoData.setVisibility(View.GONE);
         }
 
         mData.clear();

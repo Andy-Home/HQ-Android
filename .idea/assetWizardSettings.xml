@@ -59,7 +59,30 @@
         </entry>
         <entry key="vectorWizard">
           <value>
-            <PersistentState />
+            <PersistentState>
+              <option name="children">
+                <map>
+                  <entry key="vectorAssetStep">
+                    <value>
+                      <PersistentState>
+                        <option name="values">
+                          <map>
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="autoMirrored" value="true" />
+                            <entry key="height" value="1417" />
+                            <entry key="opacityPercent" value="53" />
+                            <entry key="outputName" value="ic_311997d661064923a076a6293f7156c6" />
+                            <entry key="overrideSize" value="true" />
+                            <entry key="sourceFile" value="C:\Users\Public\Pictures\Sample Pictures\311997d661064923a076a6293f7156c6.psd" />
+                            <entry key="width" value="2953" />
+                          </map>
+                        </option>
+                      </PersistentState>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </PersistentState>
           </value>
         </entry>
       </map>

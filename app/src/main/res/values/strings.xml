@@ -19,6 +19,7 @@
 
     <!-- 账务目录页面 -->
     <string name="catalog_title">账务目录</string>
+    <string name="catalog_no_data_tips">该页面还没数据哦，赶快新建账务类型吧！</string>
 
     <!-- 账务目录编辑页 -->
     <string name="catalog_category">类别 :</string>
