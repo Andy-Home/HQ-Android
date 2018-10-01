@@ -4,33 +4,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TabHost;
-import android.widget.TextView;
 
 import com.andy.BaseActivity;
 import com.andy.R;
 import com.andy.function.main.chart.ChartFragment;
 import com.andy.function.main.order.OrderFragment;
 import com.andy.function.main.person.PersonFragment;
+import com.andy.utils.ToastUtils;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Created by Andy on 2018/8/28.
  * Modify time 2018/8/28
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements MainContract.View {
 
     private static int userId = 0;
     public static int getUserId(){
@@ -50,6 +41,7 @@ public class MainActivity extends BaseActivity {
     private BottomNavigationView vBottomNavigationView;
     private ViewPager vViewPager;
 
+    private MainContract.Present mPresent;
     @Override
     protected void initView() {
         OrderFragment mOrderFragment = new OrderFragment();
@@ -65,6 +57,8 @@ public class MainActivity extends BaseActivity {
         vViewPager.setAdapter(new MainFragmentAdapter(getSupportFragmentManager(), mFragmentList));
 
         vBottomNavigationView = findViewById(R.id.bottom_tab);
+
+        mPresent = new MainPresent(this, this);
     }
 
     @Override
@@ -115,8 +109,31 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresent.syncCatalog();
+        mPresent.syncRecord();
     }
 
     @Override
     public void onBackPressed() { }
+
+    @Override
+    public void onError(String msg) {
+        ToastUtils.shortShow(this, msg);
+    }
+
+    @Override
+    public void syncCatalogSuccess() {
+
+    }
+
+    @Override
+    public void syncRecordSuccess() {
+
+    }
 }

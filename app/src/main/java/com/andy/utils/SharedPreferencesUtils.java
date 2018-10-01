@@ -103,4 +103,58 @@ public class SharedPreferencesUtils {
         map.put("openId", openId);
         return map;
     }
+
+    private static long updateTime = 0;
+
+    public void syncUpdateTime(long updateTime) {
+        SharedPreferences preferences = mContext.getSharedPreferences("data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putLong("updateTime", updateTime);
+        editor.apply();
+    }
+
+    public long getUpdateTime() {
+        if (updateTime != 0) {
+            return updateTime;
+        }
+        SharedPreferences preferences = mContext.getSharedPreferences("data", Context.MODE_PRIVATE);
+        return preferences.getLong("updateTime", 0);
+    }
+
+    private static long endTime = 0;
+
+    public void syncEndTime(long endTime) {
+        SharedPreferences preferences = mContext.getSharedPreferences("data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putLong("endTime", endTime);
+        editor.apply();
+    }
+
+    public long getEndTime() {
+        if (endTime != 0) {
+            return endTime;
+        }
+        SharedPreferences preferences = mContext.getSharedPreferences("data", Context.MODE_PRIVATE);
+        return preferences.getLong("endTime", 0);
+    }
+
+    private static long startTime = 0;
+
+    public void syncStartTime(long startTime) {
+        SharedPreferences preferences = mContext.getSharedPreferences("data", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putLong("startTime", startTime);
+        editor.apply();
+    }
+
+    public long getStartTime() {
+        if (startTime != 0) {
+            return startTime;
+        }
+        SharedPreferences preferences = mContext.getSharedPreferences("data", Context.MODE_PRIVATE);
+        return preferences.getLong("startTime", 0);
+    }
 }

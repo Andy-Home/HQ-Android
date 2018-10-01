@@ -11,10 +11,7 @@ import retrofit2.http.Query;
 public interface RecordRequest {
 
     @GET("record/sync")
-    Observable<Response> sync(@Query("userId") int userId);
-
-    @GET("record/syncCallback")
-    Observable<Response> syncCallback(@Query("recordId") int... recordId);
+    Observable<Response> sync(@Query("userId") int userId, @Query("startTime") long startTime, @Query("endTime") long endTime);
 
     @GET("record/getRecords")
     Observable<Response> getRecordList(@Query("userId") int userId, @Query("time") long time);

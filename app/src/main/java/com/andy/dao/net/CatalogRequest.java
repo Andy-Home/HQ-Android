@@ -10,10 +10,7 @@ public interface CatalogRequest {
     Observable<Response> getCatalogs(@Query("parentId") int catalogId, @Query("userId") int userId);
 
     @GET("catalog/sync")
-    Observable<Response> sync(@Query("userId") int userId);
-
-    @GET("catalog/syncCallback")
-    Observable<Response> syncCallback(@Query("catalogId") int... catalogId);
+    Observable<Response> sync(@Query("userId") int userId, @Query("updateTime") long updateTime);
 
     @GET("catalog/new")
     Observable<Response> newCatalog(@Query("data") String data);

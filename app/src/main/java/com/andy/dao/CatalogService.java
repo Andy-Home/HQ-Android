@@ -1,5 +1,7 @@
 package com.andy.dao;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.andy.dao.db.CatalogDao;
@@ -37,6 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CatalogService {
     private final static String TAG = CatalogService.class.getSimpleName();
+
     private CatalogService() {
         init();
     }
@@ -52,6 +55,7 @@ public class CatalogService {
     private CatalogDao mCatalogDao;
     private CatalogRequest mCatalogRequest;
     private SharedPreferencesUtils utils = null;
+
     private void init() {
         mCatalogDao = DBManage.getInstance().getCatalogDao();
         mCatalogRequest = NetRequestManager.getInstance().getCatalogRequest();
@@ -68,6 +72,7 @@ public class CatalogService {
                     .subscribe(new Subscriber<List<Catalog>>() {
                         Subscription s;
                         ArrayList<Catalog> data = new ArrayList<>();
+
                         @Override
                         public void onSubscribe(Subscription s) {
                             s.request(Long.MAX_VALUE);
@@ -374,6 +379,127 @@ public class CatalogService {
                     @Override
                     public void onComplete() {
                         s.cancel();
+                    }
+                });
+    }
+
+    public void sync(final BaseListener<Object> listener) {
+        long updateTime = utils.getCatalogModifyTime();
+        final long currentTime = System.currentTimeMillis();
+        final Handler mainHandler = new Handler(Looper.getMainLooper());
+
+        mCatalogRequest.sync(utils.getUserId(), updateTime)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
+                .map(new Function<Response, Map<String, List<Catalog>>>() {
+
+                    @Override
+                    public Map<String, List<Catalog>> apply(final Response response) {
+                        if (response.getCode() == 0) {
+
+                            if (response.getResult().toString().equals("")) {
+                                return new HashMap<>();
+                            }
+
+                            List<Catalog> data = new ArrayList<>();
+                            List<Catalog> delete = new ArrayList<>();
+
+                            Log.d(TAG, "sync response:" + response.getResult());
+                            List<Map<String, Object>> list = (List<Map<String, Object>>) response.getResult();
+
+                            for (Map<String, Object> map : list) {
+                                Catalog catalog = new Catalog();
+                                int id = (int) map.get("id");
+                                int parentId = (int) map.get("parentId");
+                                int userId = (int) map.get("userId");
+                                String name = (String) map.get("name");
+                                int type = (int) map.get("type");
+                                int status = (int) map.get("status");
+
+                                catalog.id = id;
+                                catalog.parentId = parentId;
+                                catalog.userId = userId;
+                                catalog.name = name;
+                                catalog.style = type;
+
+                                if (status == 0) {
+                                    delete.add(catalog);
+                                } else {
+                                    data.add(catalog);
+                                }
+                            }
+
+                            Map<String, List<Catalog>> map = new HashMap<>();
+                            map.put("data", data);
+                            map.put("delete", delete);
+                            return map;
+                        } else {
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onError("sync catalog: " + response.getMsg());
+                                }
+                            });
+                            return new HashMap<>();
+                        }
+                    }
+                }).observeOn(Schedulers.io())
+                .subscribe(new Observer<Map<String, List<Catalog>>>() {
+                    Disposable d;
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        this.d = d;
+                    }
+
+                    @Override
+                    public void onNext(Map<String, List<Catalog>> map) {
+                        if (map == null) {
+                            onError(new Throwable());
+                        } else {
+                            List<Catalog> data = map.get("data");
+
+                            if (data != null && data.size() > 0) {
+                                Catalog[] catalogs = new Catalog[data.size()];
+                                for (int i = 0; i < data.size(); i++) {
+                                    catalogs[i] = data.get(i);
+                                }
+                                mCatalogDao.insert(catalogs);
+                            }
+
+                            List<Catalog> delete = map.get("delete");
+                            if (delete != null && delete.size() > 0) {
+                                for (Catalog catalog : delete) {
+                                    mCatalogDao.deleteCatalog(catalog);
+                                }
+                            }
+                            utils.syncUpdateTime(currentTime);
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onSuccess(null);
+                                }
+                            });
+
+                            onComplete();
+                        }
+                    }
+
+                    @Override
+                    public void onError(final Throwable e) {
+                        mainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                listener.onError(e.getMessage());
+                            }
+                        });
+
+                        d.dispose();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        d.dispose();
                     }
                 });
     }
