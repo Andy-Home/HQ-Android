@@ -3,6 +3,8 @@ package com.andy.function.startup;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
 import com.andy.HQApplication;
 import com.andy.dao.BaseListener;
@@ -22,11 +24,11 @@ import java.util.Map;
  * Created by Andy on 2018/9/30.
  * Modify time 2018/9/30
  */
-public class StartupPresent implements StartupConstract.Present {
+public class StartupPresent implements StartupContract.Present {
     private Context mContext;
-    private StartupConstract.View mView;
+    private StartupContract.View mView;
 
-    StartupPresent(StartupConstract.View view, Context context) {
+    StartupPresent(StartupContract.View view, Context context) {
         mContext = context;
         mView = view;
         init();
@@ -63,6 +65,8 @@ public class StartupPresent implements StartupConstract.Present {
                 mTencent.setOpenId(mQQOpenId);
             }
             QQLogin();
+        } else {
+            mView.needLogin();
         }
     }
 
@@ -129,5 +133,19 @@ public class StartupPresent implements StartupConstract.Present {
     @Override
     public void setResult(int requestCode, int resultCode, Intent data) {
         Tencent.onActivityResultData(requestCode, resultCode, data, mListener);
+    }
+
+    @Override
+    public void getVersion(Context context) {
+        PackageManager manager = context.getPackageManager();
+        PackageInfo info = null;
+        try {
+            info = manager.getPackageInfo(context.getPackageName(), 0);
+            String version = info.versionName;
+            mView.displayVersion(version);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 }

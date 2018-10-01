@@ -9,7 +9,6 @@ import com.andy.HQApplication;
 import com.andy.dao.BaseListener;
 import com.andy.dao.DaoManager;
 import com.andy.utils.SharedPreferencesUtils;
-import com.andy.utils.ToastUtils;
 import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -76,13 +75,13 @@ public class LoginPresent implements LoginContract.Present {
             @Override
             public void onComplete(Object response) {
                 if (null == response) {
-                    ToastUtils.shortShow(mContext, "返回为空,登录失败");
+                    mView.onError("返回为空,登录失败");
                     return;
                 }
 
                 JSONObject jsonResponse = (JSONObject) response;
                 if (jsonResponse.length() == 0) {
-                    ToastUtils.shortShow(mContext, "返回为空,登录失败");
+                    mView.onError("返回为空,登录失败");
                     return;
                 }
 
@@ -97,12 +96,12 @@ public class LoginPresent implements LoginContract.Present {
 
             @Override
             public void onError(UiError uiError) {
-                ToastUtils.shortShow(mContext, uiError.errorDetail);
+                mView.onError(uiError.errorDetail);
             }
 
             @Override
             public void onCancel() {
-                ToastUtils.shortShow(mContext, "已取消QQ登录");
+                mView.onError("已取消QQ登录");
             }
         };
 

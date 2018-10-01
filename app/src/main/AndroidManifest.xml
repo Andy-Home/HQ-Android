@@ -22,7 +22,7 @@
             android:value="play" />
 
         <activity
-            android:name=".function.startup.StartupPageActivity"
+            android:name=".function.startup.StartupActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">HQ</string>
+    <string name="author">AndyCLanguage</string>
+
     <!-- 登录页面 -->
     <string name="login_user">邮箱</string>
     <string name="login_password">密码</string>
     <string name="login_button">登录</string>
     <string name="login_register">注册账号</string>
     <string name="login_find_password">找回密码</string>
+    <string name="login">正在登陆...</string>
 
     <!-- 主页面 -->
     <string name="main_order">账单</string>
@@ -56,6 +59,7 @@
     <string name="default_right">默认指右图像</string>
     <string name="edit_img_desc">编辑</string>
     <string name="qq_login_desc">QQ登录</string>
+    <string name="animation">动画</string>
 
     <string name="title">标题</string>
     <string name="back">返回</string>

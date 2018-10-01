@@ -1,6 +1,7 @@
 package com.andy.function.startup;
 
 import android.content.Intent;
+import android.widget.TextView;
 
 import com.andy.BaseActivity;
 import com.andy.R;
@@ -8,21 +9,27 @@ import com.andy.function.login.LoginActivity;
 import com.andy.function.main.MainActivity;
 import com.andy.utils.ToastUtils;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Created by Andy on 2018/9/30.
  * Modify time 2018/9/30
  */
-public class StartupPageActivity extends BaseActivity implements StartupConstract.View {
+public class StartupActivity extends BaseActivity implements StartupContract.View {
     @Override
     protected int getContentViewId() {
         return R.layout.activity_startup_page;
     }
 
 
-    private StartupConstract.Present mPresent;
+    private StartupContract.Present mPresent;
 
+    private TextView vVersion;
     @Override
     protected void initView() {
+        vVersion = findViewById(R.id.version);
+
         mPresent = new StartupPresent(this, this);
     }
 
@@ -35,6 +42,7 @@ public class StartupPageActivity extends BaseActivity implements StartupConstrac
     protected void onResume() {
         super.onResume();
         mPresent.login(this);
+        mPresent.getVersion(this);
     }
 
     @Override
@@ -45,16 +53,34 @@ public class StartupPageActivity extends BaseActivity implements StartupConstrac
 
     @Override
     public void loginSuccess(int userId) {
-        MainActivity.start(StartupPageActivity.this);
+        MainActivity.start(StartupActivity.this);
     }
 
     @Override
     public void needLogin() {
-        LoginActivity.start(StartupPageActivity.this);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                LoginActivity.start(StartupActivity.this);
+            }
+        }, 2000);
+    }
+
+    @Override
+    public void displayVersion(String version) {
+        vVersion.setText(String.format("Version：%s", version));
     }
 
     @Override
     public void onError(String msg) {
-        ToastUtils.shortShow(StartupPageActivity.this, msg);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                LoginActivity.start(StartupActivity.this);
+            }
+        }, 2000);
+        ToastUtils.shortShow(StartupActivity.this, msg);
     }
 }

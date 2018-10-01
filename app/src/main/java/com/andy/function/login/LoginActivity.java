@@ -2,7 +2,10 @@ package com.andy.function.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -30,9 +33,21 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     private ImageView vQQLogin;
 
+    private AlertDialog vLoginDialog;
     @Override
     protected void initView() {
         vQQLogin = findViewById(R.id.qq);
+
+        View view = LayoutInflater.from(this)
+                .inflate(R.layout.anim_login, null);
+
+        vLoginDialog = new AlertDialog.Builder(this)
+                .setView(view)
+                .create();
+
+        vLoginDialog.getWindow()
+                .setBackgroundDrawable(new ColorDrawable(0));
+        vLoginDialog.setCancelable(false);
     }
 
     private LoginContract.Present mPresent;
@@ -50,17 +65,20 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
             @Override
             public void onClick(View v) {
                 mPresent.QQLogin(LoginActivity.this);
+                vLoginDialog.show();
             }
         });
     }
 
     @Override
     public void loginSuccess(int userId) {
+        vLoginDialog.cancel();
         MainActivity.start(LoginActivity.this);
     }
 
     @Override
     public void onError(String msg) {
+        vLoginDialog.cancel();
         ToastUtils.shortShow(LoginActivity.this, msg);
     }
 
@@ -70,5 +88,9 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         mPresent.setResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }
