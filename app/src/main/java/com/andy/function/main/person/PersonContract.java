@@ -1,5 +1,6 @@
 package com.andy.function.main.person;
 
+import com.andy.dao.db.entity.User;
 import com.andy.function.BaseView;
 
 /**
@@ -10,6 +11,8 @@ public class PersonContract {
 
     public interface View extends BaseView {
         void logoutSuccess();
+
+        void displayUserInfo(User user);
     }
 
     public interface Present {

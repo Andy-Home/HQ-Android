@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.andy.R;
 import com.andy.dao.db.entity.RecordContent;
+import com.andy.view.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -72,6 +74,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         holder.num.setText(String.valueOf(content.num));
         holder.catalog.setText(content.catalogName);
+
+        Picasso.get().load(content.headUrl)
+                .transform(new CircleTransform())
+                .placeholder(R.mipmap.ic_launcher_round)
+                .error(R.mipmap.ic_launcher_round)
+                .noFade()
+                .into(holder.headerView);
     }
 
     @Override

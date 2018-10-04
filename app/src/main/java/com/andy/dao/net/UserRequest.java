@@ -13,4 +13,6 @@ public interface UserRequest {
     @GET("user/login")
     Observable<Response> login(@Query("data") String data);
 
+    @GET("user/getUserInfo")
+    Observable<Response> getUserInfo(@Query("userId") int userId);
 }
