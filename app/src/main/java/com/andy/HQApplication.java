@@ -13,6 +13,7 @@ import com.tencent.tauth.Tencent;
  * Modify time 2018/8/28
  */
 public class HQApplication extends Application{
+    private final String TAG = HQApplication.class.getSimpleName();
 
     @Override
     public void onCreate() {
@@ -28,6 +29,7 @@ public class HQApplication extends Application{
         DPValueUtil.getInstance().init(this);
 
         SharedPreferencesUtils.getInstance().init(this);
+
         mTencent = Tencent.createInstance(Constant.QQ_APPID, this);
     }
 }

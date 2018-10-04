@@ -13,6 +13,7 @@ import com.andy.R;
 import com.andy.function.main.chart.ChartFragment;
 import com.andy.function.main.order.OrderFragment;
 import com.andy.function.main.person.PersonFragment;
+import com.andy.utils.SharedPreferencesUtils;
 import com.andy.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     private static int userId = 0;
     public static int getUserId(){
+        if (userId == 0) {
+            userId = SharedPreferencesUtils.getInstance().getUserId();
+        }
         return userId;
     }
 

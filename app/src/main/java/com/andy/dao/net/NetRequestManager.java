@@ -22,6 +22,7 @@ public class NetRequestManager {
     private void init() {
         mRetrofit = new Retrofit.Builder()
                 //.baseUrl("http://192.168.6.103:8080/")
+                //.baseUrl("http://192.168.1.105:8080/")
                 .baseUrl("https://www.andyclanguage.cn/HQ/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())

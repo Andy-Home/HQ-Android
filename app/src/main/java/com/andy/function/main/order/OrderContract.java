@@ -9,7 +9,7 @@ public class OrderContract {
 
     public interface Present {
 
-        void getRecords(long startTime, long endTime, int num);
+        void getRecords(int month, int year);
     }
 
     public interface View extends BaseView {

@@ -107,7 +107,12 @@ public class LoginPresent implements LoginContract.Present {
 
         if (!mTencent.isSessionValid()) {
             mQQGrant = true;
-            mTencent.login(activity, "all", mListener);
+            if (mTencent.isQQInstalled(mContext)) {
+                mTencent.login(activity, "all", mListener);
+            } else {
+                mTencent.login(activity, "all", mListener, true);
+            }
+
         } else {
             mQQGrant = false;
             mTencent.checkLogin(mListener);

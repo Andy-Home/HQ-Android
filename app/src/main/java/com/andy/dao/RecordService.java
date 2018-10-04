@@ -15,16 +15,18 @@ import com.andy.utils.SharedPreferencesUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.FlowableSubscriber;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -33,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
  * Modify time 2018/9/27
  */
 public class RecordService {
-    private final static String TAG = CatalogService.class.getSimpleName();
+    private final static String TAG = RecordService.class.getSimpleName();
 
     private RecordService() {
         init();
@@ -71,6 +73,13 @@ public class RecordService {
 
         mRecordRequest.newRecord(jsonObject.toString())
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .doOnComplete(new Action() {
+                    @Override
+                    public void run() {
+                        mRecordDao.insert(record);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Response>() {
                     Disposable d;
@@ -105,70 +114,60 @@ public class RecordService {
                 });
     }
 
-    public void getRecordList(long startTime, final BaseListener<List<RecordContent>> listener) {
-        mRecordRequest.getRecordList(utils.getUserId(), startTime)
+
+    public void getRecordList(final long startTime, final long endTime, final BaseListener<List<RecordContent>> listener) {
+        if (endTime > utils.getEndTime()) {
+            Log.d(TAG, "getRecordList db");
+            getRecord(startTime, endTime, listener);
+        } else {
+            Log.d(TAG, "getRecordList sync");
+            syncOld(new BaseListener<Object>() {
+
+                @Override
+                public void onSuccess(Object o) {
+                    getRecord(startTime, endTime, listener);
+                }
+
+                @Override
+                public void onError(String msg) {
+                    listener.onError(msg);
+                }
+            });
+        }
+    }
+
+    private void getRecord(long startTime, long endTime, final BaseListener<List<RecordContent>> listener) {
+        mRecordDao.queryRecordContents(startTime, endTime)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Response>() {
-                    Disposable d;
+                .subscribe(new FlowableSubscriber<List<RecordContent>>() {
+                    Subscription s;
 
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        this.d = d;
+                    public void onSubscribe(Subscription s) {
+                        this.s = s;
+                        s.request(Long.MAX_VALUE);
                     }
 
                     @Override
-                    public void onNext(Response response) {
-                        if (response.getCode() == 0) {
-
-
-                            List<Map<String, Object>> data = (List<Map<String, Object>>) response.getResult();
-                            List<RecordContent> recordContents = new ArrayList<>();
-                            if (data != null && data.size() > 0) {
-
-                                Calendar calendar = null;
-                                for (Map<String, Object> map : data) {
-                                    RecordContent content = new RecordContent();
-                                    content.id = (int) map.get("id");
-                                    content.userId = (int) map.get("userId");
-                                    content.num = (double) map.get("amount");
-                                    content.catalog = (int) map.get("catalogId");
-                                    content.type = (int) map.get("type");
-                                    content.time = (long) map.get("recordTime");
-                                    content.headUrl = (String) map.get("headUrl");
-                                    content.catalogName = (String) map.get("catalogName");
-
-                                    Calendar temp = Calendar.getInstance();
-                                    temp.setTimeInMillis(content.time);
-                                    if (calendar == null || calendar.get(Calendar.DAY_OF_MONTH) != temp.get(Calendar.DAY_OF_MONTH)) {
-                                        calendar = temp;
-                                        content.status = 1;
-                                    }
-                                    recordContents.add(content);
-                                }
-                            }
-
-                            listener.onSuccess(recordContents);
-                            onComplete();
-
-                        } else {
-                            onError(new Throwable(response.getMsg()));
-                        }
+                    public void onNext(List<RecordContent> recordContents) {
+                        listener.onSuccess(recordContents);
+                        onComplete();
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "getRecordList", e);
-                        listener.onError(e.getMessage());
-                        d.dispose();
+                    public void onError(Throwable t) {
+                        listener.onError(t.getMessage());
+                        s.cancel();
                     }
 
                     @Override
                     public void onComplete() {
-                        d.dispose();
+                        s.cancel();
                     }
                 });
     }
+
 
     private static final long period = 3456000000l;
 
@@ -184,6 +183,7 @@ public class RecordService {
             endTime = System.currentTimeMillis();
         }
 
+        Log.d(TAG, "syncRecord start:" + startTime + " end:" + endTime);
         sync(startTime, endTime, listener);
     }
 
@@ -199,6 +199,7 @@ public class RecordService {
             startTime = endTime - period;
         }
 
+        Log.d(TAG, "syncRecord Old start:" + startTime + " end:" + endTime);
         sync(startTime, endTime, listener);
     }
 

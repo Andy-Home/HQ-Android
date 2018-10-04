@@ -60,12 +60,13 @@ public class SharedPreferencesUtils {
         return preferences.getInt("userId", 0);
     }
 
+    @SuppressLint("ApplySharedPref")
     public void putUserId(int userId) {
         mUserId = userId;
         SharedPreferences preferences = mContext.getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong("userId", userId);
-        editor.apply();
+        editor.commit();
     }
 
     public void putLoginChannel(String channel) {

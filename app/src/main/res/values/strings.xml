@@ -24,6 +24,7 @@
     <string name="catalog_title">账务目录</string>
     <string name="catalog_no_data_tips">该页面还没数据哦，赶快新建账务类型吧！</string>
 
+
     <!-- 账务目录编辑页 -->
     <string name="catalog_category">类别 :</string>
     <string name="input_catalog_name">请输入目录名称</string>
@@ -48,7 +49,8 @@
     <string name="records_earnings">收</string>
     <string name="records_expenditure">支</string>
     <string name="records_data_desc">1995 &#8211; 04 &#8211; 15 周五</string>
-    <string name="records_no_data_tips">您还没有在本软件记账哦！赶快记一笔吧 :-) </string>
+    <string name="records_no_data_tips">该月没有记账哦！赶快记一笔吧 :-) </string>
+    <string name="records_current_month">本月</string>
 
     <!-- 图表页面 -->
     <string name="chart_no_data_tips">还没记过帐，所以不能统计呢 </string>

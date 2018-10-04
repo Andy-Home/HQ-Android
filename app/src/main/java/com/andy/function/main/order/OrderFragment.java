@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andy.BaseFragment;
@@ -16,6 +17,7 @@ import com.andy.function.new_record.NewRecordActivity;
 import com.andy.utils.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -39,6 +41,12 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
 
     private SwipeRefreshLayout vRefresh;
     private ConstraintLayout vNoData;
+
+    private ImageView vNextMonth, vPreMonth;
+    private TextView vMonth;
+
+    private Calendar mDisplayTime;
+
     @Override
     protected void initView(View view) {
         vTitle = view.findViewById(R.id.title);
@@ -56,7 +64,15 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
         vList.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new OrderAdapter(mData, getContext());
         vList.setAdapter(mAdapter);
+
+        vNextMonth = view.findViewById(R.id.next_month);
+        vPreMonth = view.findViewById(R.id.pre_month);
+        vMonth = view.findViewById(R.id.month);
+
+        mDisplayTime = Calendar.getInstance();
     }
+
+    private int mCurrentMonth, mCurrentYear;
 
     @Override
     public void onResume() {
@@ -64,8 +80,13 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
         mPresent = new OrderPresent(this);
         mData.clear();
 
-        mPresent.getRecords(System.currentTimeMillis(), 0, 10);
         getLifecycle().addObserver(mPresent);
+
+        Calendar mCurrentTime = Calendar.getInstance();
+        mCurrentMonth = mCurrentTime.get(Calendar.MONTH) + 1;
+        mCurrentYear = mCurrentTime.get(Calendar.YEAR);
+
+        displayTime(mCurrentMonth, mCurrentYear);
     }
 
     @Override
@@ -81,13 +102,72 @@ public class OrderFragment extends BaseFragment implements OrderContract.View {
             @Override
             public void onRefresh() {
                 mData.clear();
-                mPresent.getRecords(System.currentTimeMillis(), 0, 10);
+
+                int month = mDisplayTime.get(Calendar.MONTH) + 1;
+                int year = mDisplayTime.get(Calendar.YEAR);
+                mPresent.getRecords(month, year);
+            }
+        });
+
+        vNextMonth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int month = mDisplayTime.get(Calendar.MONTH) + 1;
+                int year = mDisplayTime.get(Calendar.YEAR);
+
+                if (month == 1) {
+                    month = 12;
+                    year--;
+                } else {
+                    month--;
+                }
+                displayTime(month, year);
+            }
+        });
+
+        vPreMonth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int month = mDisplayTime.get(Calendar.MONTH) + 1;
+                int year = mDisplayTime.get(Calendar.YEAR);
+
+                if (month == 12) {
+                    month = 1;
+                    year++;
+                } else {
+                    month++;
+                }
+                displayTime(month, year);
+            }
+        });
+
+        vMonth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayTime(mCurrentMonth, mCurrentYear);
             }
         });
     }
 
+    private void displayTime(int month, int year) {
+        mDisplayTime.set(year, month, 0);
+
+        vPreMonth.setVisibility(View.VISIBLE);
+        if (month == mCurrentMonth && year == mCurrentYear) {
+            vMonth.setText(R.string.records_current_month);
+            vPreMonth.setVisibility(View.GONE);
+        } else if (year == mCurrentYear) {
+            vMonth.setText(String.format("%d 月", month));
+        } else {
+            vMonth.setText(String.format("%d 年 %d 月", year, month));
+        }
+        mPresent.getRecords(month, year);
+        vRefresh.setRefreshing(true);
+    }
+
     @Override
     public void displayRecords(List<RecordContent> data) {
+        mData.clear();
         mData.addAll(data);
         mAdapter.notifyDataSetChanged();
 

@@ -36,6 +36,7 @@ public class ChartFragment extends BaseFragment implements ChartContract.View {
     private ChartAdapter mAdapter;
 
     private ConstraintLayout vNoChart;
+    private ConstraintLayout vMain;
     @Override
     protected void initView(View view) {
         vTitle = view.findViewById(R.id.title);
@@ -50,6 +51,8 @@ public class ChartFragment extends BaseFragment implements ChartContract.View {
         vList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new ChartAdapter(getActivity(), mData, mTotal);
         vList.setAdapter(mAdapter);
+
+        vMain = view.findViewById(R.id.constraintLayout);
     }
 
     @Override
@@ -73,9 +76,11 @@ public class ChartFragment extends BaseFragment implements ChartContract.View {
         mData.addAll(data);
 
         if (mData.size() == 0) {
+            vMain.setVisibility(View.GONE);
             vNoChart.setVisibility(View.VISIBLE);
             return;
         } else {
+            vMain.setVisibility(View.VISIBLE);
             vNoChart.setVisibility(View.GONE);
         }
 

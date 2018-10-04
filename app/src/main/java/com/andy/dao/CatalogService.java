@@ -12,8 +12,6 @@ import com.andy.dao.net.CatalogRequest;
 import com.andy.dao.net.NetRequestManager;
 import com.andy.dao.net.Response;
 import com.andy.utils.SharedPreferencesUtils;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +19,6 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,13 +95,23 @@ public class CatalogService {
                         }
                     });
         } else {
+            final ArrayList<Catalog> catalogs = new ArrayList<>();
             Log.d(TAG, "net getCatalogList");
             mCatalogRequest.getCatalogs(parentId, utils.getUserId())
                     .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
+                    .doOnComplete(new Action() {
+                        @Override
+                        public void run() {
+                            for (Catalog catalog : catalogs) {
+                                mCatalogDao.insert(catalog);
+                            }
+
+                        }
+                    })
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<Response>() {
                         Disposable d;
-                        ArrayList<Catalog> catalogs = new ArrayList<>();
 
                         @Override
                         public void onSubscribe(Disposable d) {
@@ -115,10 +122,9 @@ public class CatalogService {
                         public void onNext(Response response) {
                             if (response.getCode() == 0) {
                                 Log.d(TAG, "response:" + response.getResult().toString());
-                                ObjectMapper mapper = new ObjectMapper();
-                                JavaType javaType = mapper.getTypeFactory().constructParametricType(ArrayList.class, Map.class);
+
                                 try {
-                                    List<Map<String, Object>> data = mapper.readValue(response.getResult().toString(), javaType);
+                                    List<Map<String, Object>> data = (List<Map<String, Object>>) response.getResult();
 
                                     if (data != null && data.size() > 0) {
 
@@ -131,14 +137,13 @@ public class CatalogService {
                                             catalog.style = (int) map.get("type");
 
                                             catalogs.add(catalog);
-                                            mCatalogDao.insert(catalog);
                                         }
                                     }
 
                                     utils.putCatalogModifyTime(System.currentTimeMillis());
                                     listener.onSuccess(catalogs);
                                     onComplete();
-                                } catch (IOException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                     onError(new Throwable(e.getCause()));
                                 }
@@ -473,7 +478,7 @@ public class CatalogService {
                                     mCatalogDao.deleteCatalog(catalog);
                                 }
                             }
-                            utils.syncUpdateTime(currentTime);
+                            utils.putCatalogModifyTime(currentTime);
                             mainHandler.post(new Runnable() {
                                 @Override
                                 public void run() {

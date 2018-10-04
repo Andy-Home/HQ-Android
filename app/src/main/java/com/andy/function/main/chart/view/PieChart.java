@@ -51,6 +51,7 @@ public class PieChart extends View {
     private double mTotal = 0d;
 
     public void setData(PieContent... values) {
+        mTotal = 0d;
         mValues = values;
         for (int i = 0; i < values.length; i++) {
             mTotal += values[i].getNum();

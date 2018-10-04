@@ -18,10 +18,11 @@
         android:id="@+id/refresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include">
+        app:layout_constraintTop_toBottomOf="@+id/view4">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -30,8 +31,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
+                android:layout_height="match_parent" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/no_order"
@@ -59,9 +59,9 @@
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:gravity="center"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="24dp"
+                    android:gravity="center"
                     android:text="@string/records_no_data_tips"
                     android:textColor="@color/color3"
                     android:textSize="16sp"
@@ -83,4 +83,49 @@
         android:src="@mipmap/chinese_money"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="wrap_content"
+        android:background="@android:color/white"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+    <TextView
+        android:id="@+id/month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/records_current_month"
+        android:textColor="@color/mainColor"
+        android:focusable="true"
+        android:clickable="true"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/view4"
+        app:layout_constraintEnd_toEndOf="@+id/view4"
+        app:layout_constraintStart_toStartOf="@+id/view4"
+        app:layout_constraintTop_toTopOf="@+id/view4" />
+
+    <ImageView
+        android:id="@+id/pre_month"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/view4"
+        app:layout_constraintStart_toStartOf="@+id/view4"
+        app:layout_constraintTop_toTopOf="@+id/view4"
+        app:srcCompat="@mipmap/left_main_color" />
+
+    <ImageView
+        android:id="@+id/next_month"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/refresh"
+        app:layout_constraintEnd_toEndOf="@+id/view4"
+        app:layout_constraintTop_toTopOf="@+id/view4"
+        app:srcCompat="@mipmap/right_main_color" />
 </android.support.constraint.ConstraintLayout>

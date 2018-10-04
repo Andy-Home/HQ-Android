@@ -8,6 +8,7 @@ import com.andy.dao.BaseListener;
 import com.andy.dao.DaoManager;
 import com.andy.dao.db.entity.RecordContent;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class OrderPresent implements OrderContract.Present, LifecycleObserver {
@@ -30,15 +31,53 @@ public class OrderPresent implements OrderContract.Present, LifecycleObserver {
         mView = null;
     }
 
+    private int mCurrentMonth, mCurrentYear;
     @Override
-    public void getRecords(long startTime, long endTime, int num) {
-        mDaoManager.mRecordService.getRecordList(startTime, new BaseListener<List<RecordContent>>() {
+    public void getRecords(int month, int year) {
+        mCurrentMonth = month;
+        mCurrentYear = year;
+        final int finalYear = year;
+        final int finalMonth = month;
 
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        if (month == 1) {
+            year--;
+            month = 12;
+        } else {
+            month--;
+        }
+
+        start.set(year, month, 1, 0, 0, 0);
+
+        if (month == 12) {
+            year++;
+            month = 1;
+        } else {
+            month++;
+        }
+        end.set(year, month, 1, 0, 0, 0);
+
+        long startTime = start.getTimeInMillis();
+        long endTime = end.getTimeInMillis();
+
+        mDaoManager.mRecordService.getRecordList(startTime, endTime, new BaseListener<List<RecordContent>>() {
             @Override
             public void onSuccess(List<RecordContent> recordContents) {
-                if (mView != null) {
-                    mView.displayRecords((recordContents));
+                if (mView != null && finalMonth == mCurrentMonth && finalYear == mCurrentYear) {
+                    Calendar calendar = null;
+
+                    for (RecordContent content : recordContents) {
+                        Calendar temp = Calendar.getInstance();
+                        temp.setTimeInMillis(content.time);
+                        if (calendar == null || calendar.get(Calendar.DAY_OF_MONTH) != temp.get(Calendar.DAY_OF_MONTH)) {
+                            calendar = temp;
+                            content.status = 1;
+                        }
+                    }
+                    mView.displayRecords(recordContents);
                 }
+
             }
 
             @Override
