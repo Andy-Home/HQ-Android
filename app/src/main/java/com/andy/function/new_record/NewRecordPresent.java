@@ -40,8 +40,33 @@ public class NewRecordPresent implements NewRecordContract.Present, LifecycleObs
 
 
     @Override
-    public void getCatalog(final View view, int id) {
-        mDaoManager.mCatalogService.getCatalogList(id, new BaseListener<ArrayList<Catalog>>() {
+    public void getCatalog(final View view, int id, int type) {
+        mDaoManager.mCatalogService.getCatalogListByType(type, id, new BaseListener<List<Catalog>>() {
+            @Override
+            public void onSuccess(List<Catalog> catalogs) {
+                if (mView != null) {
+                    List<CatalogItem> items = new ArrayList<>();
+                    for (Catalog catalog : catalogs) {
+                        CatalogItem item = new CatalogItem();
+                        item.text = catalog.name;
+                        item.id = catalog.id;
+                        item.parentId = catalog.parentId;
+                        item.type = catalog.style;
+                        items.add(item);
+                    }
+
+                    mView.showCatalogWindow(view, items);
+                }
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (mView != null) {
+                    mView.onError(msg);
+                }
+            }
+        });
+        /*mDaoManager.mCatalogService.getCatalogList(id, new BaseListener<ArrayList<Catalog>>() {
             @Override
             public void onSuccess(ArrayList<Catalog> data) {
                 if (mView == null) {
@@ -67,7 +92,7 @@ public class NewRecordPresent implements NewRecordContract.Present, LifecycleObs
                     mView.onError(msg);
                 }
             }
-        });
+        });*/
 
     }
 

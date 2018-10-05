@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class CatalogContract {
 
     interface Present {
-        void getCatalogs(int parentId, int userId);
+        void getCatalogs(int parentId);
     }
 
     public interface View extends BaseView {

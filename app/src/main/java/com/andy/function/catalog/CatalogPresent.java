@@ -39,7 +39,7 @@ public class CatalogPresent implements CatalogContract.Present, LifecycleObserve
     }
 
     @Override
-    public void getCatalogs(final int parentId, int userId) {
+    public void getCatalogs(final int parentId) {
         mDaoManager.mCatalogService.getCatalogList(parentId, new BaseListener<ArrayList<Catalog>>() {
             @Override
             public void onSuccess(ArrayList<Catalog> data) {

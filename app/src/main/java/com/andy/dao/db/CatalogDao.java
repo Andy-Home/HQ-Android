@@ -24,13 +24,23 @@ public interface CatalogDao {
     void insert(Catalog catalog);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Catalog ... catalogs);
+    void insert(Catalog... catalogs);
 
     @Query("select * from catalogs")
     Flowable<List<Catalog>> queryAll();
 
-    @Query("select * from catalogs where parent_id = :parentId and user_id in (:users) ")
-    Flowable<List<Catalog>> queryCatalogList(int parentId, String users);
+    @Query("select * " +
+            "from catalogs " +
+            "where parent_id = :parentId " +
+            "and user_id in (:users) ")
+    Flowable<List<Catalog>> queryCatalogList(int parentId, String[] users);
+
+    @Query("select * " +
+            "from catalogs " +
+            "where parent_id = :parentId " +
+            "and user_id in (:users) " +
+            "and style = :type")
+    Flowable<List<Catalog>> queryCatalogListByType(int parentId, String[] users, int type);
 
     @Query("with recursive " +
             "c as ( " +

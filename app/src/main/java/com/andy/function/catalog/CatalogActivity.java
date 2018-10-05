@@ -16,7 +16,6 @@ import com.andy.R;
 import com.andy.dao.db.entity.Catalog;
 import com.andy.function.catalog.adapter.CatalogAdapter;
 import com.andy.function.catalog_edit.CatalogEditActivity;
-import com.andy.function.main.MainActivity;
 import com.andy.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
     private ImageView vBack;
     private RecyclerView vRecyclerView = null;
 
-    private FloatingActionButton vToolbox, vEdit, vNewCatalog;
+    private FloatingActionButton vNewCatalog;
 
     private CatalogAdapter mAdapter = null;
     private ArrayList<Catalog> mData = new ArrayList<>();
@@ -82,8 +81,6 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
         vBack = findViewById(R.id.back);
         vBack.setVisibility(View.VISIBLE);
 
-        vToolbox = findViewById(R.id.toolbox);
-        vEdit = findViewById(R.id.edit);
         vNewCatalog = findViewById(R.id.new_catalog);
 
         vNoData = findViewById(R.id.no_catalog);
@@ -108,21 +105,6 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
             }
         });
 
-        vToolbox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOpenToolbox) {
-                    mOpenToolbox = false;
-                    CatalogAnimator.funBackAnimator(vToolbox, vNewCatalog, 1);
-                    CatalogAnimator.funBackAnimator(vToolbox, vEdit, 2);
-                } else {
-                    mOpenToolbox = true;
-                    CatalogAnimator.funPopAnimator(vToolbox, vNewCatalog, 1);
-                    CatalogAnimator.funPopAnimator(vToolbox, vEdit, 2);
-                }
-            }
-        });
-
         vNewCatalog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,39 +112,17 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
             }
         });
 
-        vEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                vToolbox.performClick();
-                if (mAdapter.currentStatus() == CatalogAdapter.DEFAULT) {
-                    mAdapter.changeStatus(CatalogAdapter.EDIT);
-                    vEdit.setImageResource(R.mipmap.right_white);
-                } else if (mAdapter.currentStatus() == CatalogAdapter.EDIT) {
-                    mAdapter.changeStatus(CatalogAdapter.DEFAULT);
-                    vEdit.setImageResource(R.mipmap.edit_white);
-                }
-
-            }
-        });
-
         mAdapter.setOnItemClickListener(new CatalogAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Catalog item, int position, int status) {
-                if (status == CatalogAdapter.DEFAULT) {
-
-                    CatalogActivity.start(CatalogActivity.this, item.id, item.name);
-
-                } else if (status == CatalogAdapter.EDIT) {
-
-                    CatalogEditActivity.start(CatalogActivity.this, CatalogEditActivity.EDIT, mParentId, mParentName, item.id);
-                }
+                CatalogEditActivity.start(CatalogActivity.this, CatalogEditActivity.EDIT, mParentId, mParentName, item.id);
             }
         });
 
         vRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPresent.getCatalogs(mParentId, MainActivity.getUserId());
+                mPresent.getCatalogs(mParentId);
             }
         });
     }
@@ -172,7 +132,7 @@ public class CatalogActivity extends BaseActivity implements CatalogContract.Vie
         super.onResume();
         mPresent = new CatalogPresent(this, this);
         getLifecycle().addObserver(mPresent);
-        mPresent.getCatalogs(mParentId, MainActivity.getUserId());
+        mPresent.getCatalogs(mParentId);
         vRefresh.setRefreshing(true);
     }
 

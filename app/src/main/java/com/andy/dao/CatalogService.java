@@ -358,7 +358,7 @@ public class CatalogService {
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new FlowableSubscriber<RecordStatistics>() {
                     Subscription s;
-
+                    int flag = 0;
                     @Override
                     public void onSubscribe(Subscription s) {
                         this.s = s;
@@ -367,8 +367,11 @@ public class CatalogService {
 
                     @Override
                     public void onNext(RecordStatistics recordStatistics) {
-                        data.add(recordStatistics);
-                        if (data.size() == size[0]) {
+                        flag++;
+                        if (recordStatistics.num != 0) {
+                            data.add(recordStatistics);
+                        }
+                        if (flag == size[0]) {
                             listener.onSuccess(data);
                             onComplete();
                         }
@@ -393,7 +396,7 @@ public class CatalogService {
         final long currentTime = System.currentTimeMillis();
         final Handler mainHandler = new Handler(Looper.getMainLooper());
 
-        mCatalogRequest.sync(utils.getUserId(), updateTime)
+        mCatalogRequest.sync(utils.getUserId(), updateTime - (1000 * 60 * 60 * 12))
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.newThread())
                 .map(new Function<Response, Map<String, List<Catalog>>>() {
@@ -505,6 +508,40 @@ public class CatalogService {
                     @Override
                     public void onComplete() {
                         d.dispose();
+                    }
+                });
+    }
+
+    public void getCatalogListByType(int type, int parentId, final BaseListener<List<Catalog>> listener) {
+        mCatalogDao.queryCatalogListByType(parentId, utils.getHomeUsers(), type)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<Catalog>>() {
+                    Subscription s;
+                    ArrayList<Catalog> data = new ArrayList<>();
+
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        s.request(Long.MAX_VALUE);
+                        this.s = s;
+                    }
+
+                    @Override
+                    public void onNext(List<Catalog> catalogs) {
+                        data.addAll(catalogs);
+                        onComplete();
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        listener.onError("db error");
+                        s.cancel();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        listener.onSuccess(data);
+                        s.cancel();
                     }
                 });
     }

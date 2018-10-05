@@ -75,30 +75,6 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/toolbox"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:src="@mipmap/toolbox"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/edit"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/edit_white"
-        app:fabSize="mini"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <android.support.design.widget.FloatingActionButton
         android:id="@+id/new_catalog"
         android:layout_width="46dp"
         android:layout_height="46dp"
@@ -106,7 +82,6 @@
         android:layout_marginEnd="16dp"
         app:fabSize="mini"
         android:src="@mipmap/add"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>

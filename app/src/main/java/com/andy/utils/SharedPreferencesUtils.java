@@ -164,18 +164,19 @@ public class SharedPreferencesUtils {
         SharedPreferences preferences = mContext.getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
-        homeUsers = users;
+        homeUsers = users.split(",");
         editor.putString("homeUsers", users);
         editor.commit();
     }
 
-    private static String homeUsers = "";
+    private static String[] homeUsers = new String[4];
 
-    public String getHomeUsers() {
-        if (!homeUsers.equals("")) {
+    public String[] getHomeUsers() {
+        if (homeUsers.length != 0) {
             return homeUsers;
         }
         SharedPreferences preferences = mContext.getSharedPreferences("data", Context.MODE_PRIVATE);
-        return preferences.getString("homeUsers", "" + mUserId);
+        String users = preferences.getString("homeUsers", "" + mUserId);
+        return users.split(",");
     }
 }

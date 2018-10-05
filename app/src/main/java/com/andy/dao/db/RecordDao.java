@@ -40,7 +40,7 @@ public interface RecordDao {
             "and records.time <= :end " +
             "and records.user_id in (:users) " +
             "order by time desc")
-    Flowable<List<RecordContent>> queryRecordContents(long start, long end, String users);
+    Flowable<List<RecordContent>> queryRecordContents(long start, long end, String[] users);
 
     @Query("select count(records.num) as num, catalogs.name, records.type_id, catalogs.style " +
             "from catalogs " +

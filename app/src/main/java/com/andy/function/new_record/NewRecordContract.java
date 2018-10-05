@@ -17,7 +17,7 @@ public class NewRecordContract {
 
     public interface Present {
 
-        void getCatalog(View view, int id);
+        void getCatalog(View view, int id, int type);
 
         void saveRecord(Record record);
     }

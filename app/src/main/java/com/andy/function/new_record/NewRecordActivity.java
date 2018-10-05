@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.andy.BaseActivity;
@@ -49,7 +48,6 @@ public class NewRecordActivity extends BaseActivity implements NewRecordContract
 
     private NewRecordPresent mPresent;
 
-    private LinearLayout vTypeLayout;
     private EditText vMoney;
     private TextView vType;
 
@@ -77,8 +75,6 @@ public class NewRecordActivity extends BaseActivity implements NewRecordContract
         vCalendarView = findViewById(R.id.calendarView);
         vCalendarView.setSelectedDate(currentDate);
 
-        vTypeLayout = findViewById(R.id.type);
-
         vMoney = findViewById(R.id.money);
         vType = findViewById(R.id.text);
     }
@@ -98,7 +94,7 @@ public class NewRecordActivity extends BaseActivity implements NewRecordContract
             @Override
             public void onClick(View v) {
                 if (mWindowsIndex != index || vWindow == null) {
-                    mPresent.getCatalog(vCategory, 0);
+                    mPresent.getCatalog(vCategory, 0, mCurrentType);
                 } else {
                     vWindow.show();
                 }
@@ -156,6 +152,19 @@ public class NewRecordActivity extends BaseActivity implements NewRecordContract
                 mPresent.saveRecord(record);
             }
         });
+
+        vType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCurrentType == 0) {
+                    mCurrentType = 1;
+                } else {
+                    mCurrentType = 0;
+                }
+                displayType();
+                mPresent.getCatalog(vCategory, 0, mCurrentType);
+            }
+        });
     }
 
     private CatalogItem mCurrentItem;
@@ -178,18 +187,20 @@ public class NewRecordActivity extends BaseActivity implements NewRecordContract
                     mCurrentItem = item;
                     ((TextWithDropView) view).setContentText(item.text);
                     vWindow.dismiss();
-                    createTypeView(mWindowsIndex + 1);
-                    displayType();
+                    //createTypeView(mWindowsIndex + 1);
+                    //displayType();
                 }
             }
         });
         vWindow.show();
     }
 
+    private int mCurrentType = 0;
+
     public void displayType() {
-        if (mCurrentItem.type == 0) {
+        if (mCurrentType == 0) {
             vType.setText(R.string.record_expenditure);
-        } else if (mCurrentItem.type == 1) {
+        } else if (mCurrentType == 1) {
             vType.setText(R.string.record_earnings);
         }
     }
@@ -202,45 +213,5 @@ public class NewRecordActivity extends BaseActivity implements NewRecordContract
     @Override
     public void onError(String msg) {
         ToastUtils.shortShow(this, msg);
-    }
-
-    private void createTypeView(final int position) {
-        final TextWithDropView textWithDropView = new TextWithDropView(NewRecordActivity.this);
-        textWithDropView.setContentText(getResources()
-                .getString(R.string.record_choose_type));
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.topMargin = 16 * 5;
-        textWithDropView.setLayoutParams(params);
-
-        textWithDropView.setOnClickListener(new View.OnClickListener() {
-            final int index = position;
-
-            @Override
-            public void onClick(View view) {
-                if (mWindowsIndex != index || vWindow == null) {
-                    mPresent.getCatalog(textWithDropView, mCurrentItem.id);
-                } else {
-                    vWindow.show();
-                }
-                mWindowsIndex = index;
-            }
-        });
-        dealView(position);
-        mViewList.add(position, textWithDropView);
-
-        vTypeLayout.addView(textWithDropView, position - 1);
-    }
-
-    private void dealView(final int position) {
-        if (mViewList.size() != position) {
-            vTypeLayout.removeViews(position - 1, vTypeLayout.getChildCount() - position + 1);
-            int size = mViewList.size();
-            for (int i = size - 1; i >= position; i--) {
-                mViewList.remove(i);
-            }
-        }
     }
 }
