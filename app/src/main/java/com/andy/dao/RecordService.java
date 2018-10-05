@@ -137,7 +137,7 @@ public class RecordService {
     }
 
     private void getRecord(long startTime, long endTime, final BaseListener<List<RecordContent>> listener) {
-        mRecordDao.queryRecordContents(startTime, endTime)
+        mRecordDao.queryRecordContents(startTime, endTime, utils.getHomeUsers())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new FlowableSubscriber<List<RecordContent>>() {

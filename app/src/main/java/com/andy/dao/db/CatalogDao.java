@@ -29,8 +29,8 @@ public interface CatalogDao {
     @Query("select * from catalogs")
     Flowable<List<Catalog>> queryAll();
 
-    @Query("select * from catalogs where parent_id = :parentId")
-    Flowable<List<Catalog>> queryCatalogList(int parentId);
+    @Query("select * from catalogs where parent_id = :parentId and user_id in (:users) ")
+    Flowable<List<Catalog>> queryCatalogList(int parentId, String users);
 
     @Query("with recursive " +
             "c as ( " +

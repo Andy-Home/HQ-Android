@@ -144,6 +144,11 @@ public class NewRecordActivity extends BaseActivity implements NewRecordContract
                     return;
                 }
 
+                if (mCurrentItem == null || mCurrentItem.id == 0) {
+                    ToastUtils.shortShow(NewRecordActivity.this,
+                            R.string.record_choose_catalog_tips);
+                    return;
+                }
                 record.num = Double.valueOf(money);
                 record.time = vCalendarView.getSelectedDate().getDate().getTime();
                 record.typeId = mCurrentItem.id;

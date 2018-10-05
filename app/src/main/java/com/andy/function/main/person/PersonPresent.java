@@ -43,6 +43,7 @@ public class PersonPresent implements PersonContract.Present, LifecycleObserver 
         mSharedPreferencesUtils.syncUpdateTime(0);
         mSharedPreferencesUtils.syncStartTime(0);
         mSharedPreferencesUtils.syncEndTime(0);
+        mSharedPreferencesUtils.putHomeUsers("");
         mView.logoutSuccess();
     }
 

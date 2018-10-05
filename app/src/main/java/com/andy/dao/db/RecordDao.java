@@ -5,7 +5,6 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
 
 import com.andy.dao.db.entity.Record;
 import com.andy.dao.db.entity.RecordContent;
@@ -39,8 +38,9 @@ public interface RecordDao {
             "on users.id = records.user_id " +
             "where records.time >= :start " +
             "and records.time <= :end " +
+            "and records.user_id in (:users) " +
             "order by time desc")
-    Flowable<List<RecordContent>> queryRecordContents(long start, long end);
+    Flowable<List<RecordContent>> queryRecordContents(long start, long end, String users);
 
     @Query("select count(records.num) as num, catalogs.name, records.type_id, catalogs.style " +
             "from catalogs " +
@@ -53,17 +53,11 @@ public interface RecordDao {
     @Query("select total(records.num) " +
             "from records " +
             "where records.type_id in (:id) " +
-            "and records.time < :start and records.time > :end ")
+            "and records.time >= :start and records.time < :end ")
     Maybe<Double> queryRecordTotal(long start, long end, Integer... id);
 
     @Query("select * from records where id = :id")
     Maybe<Record> queryRecord(long id);
-
-    @Update
-    void update(Record record);
-
-    @Update
-    void update(Record... records);
 
     @Delete
     void delete(Record record);

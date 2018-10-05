@@ -63,7 +63,7 @@ public class CatalogService {
         long time = utils.getCatalogModifyTime();
         if (time + 86400000 > System.currentTimeMillis()) {
             Log.d(TAG, "db getCatalogList");
-            mCatalogDao.queryCatalogList(parentId)
+            mCatalogDao.queryCatalogList(parentId, utils.getHomeUsers())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<List<Catalog>>() {
@@ -303,7 +303,7 @@ public class CatalogService {
 
         final List<RecordStatistics> data = new ArrayList<>();
         final int[] size = {0};
-        mCatalogDao.queryCatalogList(id)
+        mCatalogDao.queryCatalogList(id, utils.getHomeUsers())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.io())
                 .flatMap(new Function<List<Catalog>, Publisher<Catalog>>() {

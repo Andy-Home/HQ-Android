@@ -158,4 +158,24 @@ public class SharedPreferencesUtils {
         SharedPreferences preferences = mContext.getSharedPreferences("data", Context.MODE_PRIVATE);
         return preferences.getLong("startTime", 0);
     }
+
+    @SuppressLint("ApplySharedPref")
+    public void putHomeUsers(String users) {
+        SharedPreferences preferences = mContext.getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        homeUsers = users;
+        editor.putString("homeUsers", users);
+        editor.commit();
+    }
+
+    private static String homeUsers = "";
+
+    public String getHomeUsers() {
+        if (!homeUsers.equals("")) {
+            return homeUsers;
+        }
+        SharedPreferences preferences = mContext.getSharedPreferences("data", Context.MODE_PRIVATE);
+        return preferences.getString("homeUsers", "" + mUserId);
+    }
 }

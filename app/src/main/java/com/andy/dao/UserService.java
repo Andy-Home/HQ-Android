@@ -78,6 +78,7 @@ public class UserService {
                             int userId = (int) response.getResult();
                             utils.putUserId(userId);
                             listener.onSuccess(userId);
+                            getUserInfo(null);
                             onComplete();
                         } else {
                             onError(new Throwable(response.getMsg()));
@@ -130,7 +131,12 @@ public class UserService {
                                 user.headUrl = (String) result.get("headUrl");
                                 user.nickName = (String) result.get("nickName");
 
-                                listener.onSuccess(user);
+                                String users = (String) result.get("homeUsers");
+                                utils.putHomeUsers(users);
+
+                                if (listener != null) {
+                                    listener.onSuccess(user);
+                                }
                                 onComplete();
                             } else {
                                 onError(new Throwable("后台返回数据格式错误！"));
@@ -142,7 +148,10 @@ public class UserService {
 
                     @Override
                     public void onError(Throwable e) {
-                        listener.onError(e.getMessage());
+                        if (listener != null) {
+                            listener.onError(e.getMessage());
+                        }
+
                         d.dispose();
                     }
 

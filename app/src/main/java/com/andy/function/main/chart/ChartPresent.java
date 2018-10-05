@@ -8,6 +8,7 @@ import com.andy.dao.BaseListener;
 import com.andy.dao.DaoManager;
 import com.andy.dao.db.entity.RecordStatistics;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -35,8 +36,31 @@ public class ChartPresent implements ChartContract.Present, LifecycleObserver {
     }
 
     @Override
-    public void getCatalog(long start, long end, int id) {
-        mDaoManager.mCatalogService.getCatalog(start, end, id, new BaseListener<List<RecordStatistics>>() {
+    public void getCatalog(int id) {
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        int month = start.get(Calendar.MONTH) + 1;
+        int year = start.get(Calendar.YEAR);
+        if (month == 1) {
+            year--;
+            month = 12;
+        } else {
+            month--;
+        }
+
+        start.set(year, month, 1, 0, 0, 0);
+
+        if (month == 12) {
+            year++;
+            month = 1;
+        } else {
+            month++;
+        }
+        end.set(year, month, 1, 0, 0, 0);
+
+        long startTime = start.getTimeInMillis();
+        long endTime = end.getTimeInMillis();
+        mDaoManager.mCatalogService.getCatalog(startTime, endTime, id, new BaseListener<List<RecordStatistics>>() {
 
             @Override
             public void onSuccess(List<RecordStatistics> recordStatistics) {

@@ -16,6 +16,6 @@ public class ChartContract {
     }
 
     public interface Present {
-        void getCatalog(long start, long end, int id);
+        void getCatalog(int id);
     }
 }

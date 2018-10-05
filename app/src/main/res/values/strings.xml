@@ -44,6 +44,7 @@
     <string name="record_save">保存</string>
     <string name="record_choose_type">账务类型</string>
     <string name="record_input_money_tips">未输入金额</string>
+    <string name="record_choose_catalog_tips">请选择类型</string>
 
     <!-- 账务列表 -->
     <string name="records_earnings">收</string>

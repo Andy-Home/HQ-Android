@@ -65,7 +65,8 @@ public class ChartFragment extends BaseFragment implements ChartContract.View {
         super.onResume();
         mPresent = new ChartPresent(this);
         getLifecycle().addObserver(mPresent);
-        mPresent.getCatalog(System.currentTimeMillis(), 0, 0);
+
+        mPresent.getCatalog(0);
     }
 
     private double mTotal = 0.0;
