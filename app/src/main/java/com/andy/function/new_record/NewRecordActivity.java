@@ -150,6 +150,8 @@ public class NewRecordActivity extends BaseActivity implements NewRecordContract
                 record.typeId = mCurrentItem.id;
                 record.userId = MainActivity.getUserId();
                 mPresent.saveRecord(record);
+
+                vSave.setClickable(false);
             }
         });
 
@@ -188,7 +190,7 @@ public class NewRecordActivity extends BaseActivity implements NewRecordContract
                     ((TextWithDropView) view).setContentText(item.text);
                     vWindow.dismiss();
                     //createTypeView(mWindowsIndex + 1);
-                    //displayType();
+                    displayType();
                 }
             }
         });
@@ -212,6 +214,7 @@ public class NewRecordActivity extends BaseActivity implements NewRecordContract
 
     @Override
     public void onError(String msg) {
+        vSave.setClickable(true);
         ToastUtils.shortShow(this, msg);
     }
 }

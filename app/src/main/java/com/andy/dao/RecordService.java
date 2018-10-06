@@ -179,7 +179,7 @@ public class RecordService {
             endTime = System.currentTimeMillis();
             startTime = endTime - period;
         } else {
-            startTime = endTime;
+            startTime = endTime - (1000 * 60 * 60 * 48);
             endTime = System.currentTimeMillis();
         }
 
@@ -195,7 +195,7 @@ public class RecordService {
             endTime = System.currentTimeMillis();
             startTime = endTime - period;
         } else {
-            endTime = startTime;
+            endTime = startTime + (1000 * 60 * 60 * 48);
             startTime = endTime - period;
         }
 
